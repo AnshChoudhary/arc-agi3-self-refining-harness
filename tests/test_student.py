@@ -63,10 +63,21 @@ def test_loop_runs_code_then_acts_and_logs():
 
 
 def test_gives_up_after_repeated_bad_replies():
-    llm = FakeLLM(["nonsense"] * 3)
+    llm = FakeLLM(["nonsense"] * 20)
     env = ArcEnv("ls20", seed=0, offline=True)
     steps, used = StudentAgent(llm, log=lambda *_: None).play(env, max_levels=None)
-    assert not env.done and env.steps == [] and len(steps[0].invalid_attempts) == 3
+    assert not env.done and env.steps == []
+    assert used.calls == 6  # 3 bad, fresh-context escalation, 3 more bad, give up
+    assert any(e.startswith("escalated") for e in steps[0].invalid_attempts)
+    assert "ACTION JSON object only" in llm.seen[3][-1]["content"] and len(llm.seen[3]) == 3
+
+
+def test_escalation_recovers_when_model_then_acts():
+    llm = FakeLLM(["nonsense"] * 3 + [json.dumps({"hypothesis": "ok", "action": "ACTION1", "notes": "n"})] + ["x"] * 20)
+    env = ArcEnv("ls20", seed=0, offline=True, budget_multiplier=1)
+    env.baselines = [1] + env.baselines[1:]
+    steps, used = StudentAgent(llm, log=lambda *_: None).play(env, max_levels=None)
+    assert [s.action for s in env.steps] == ["ACTION1"] and used.calls == 4
 
 
 def test_analysis_cap_is_enforced_and_loop_abandons():
@@ -78,7 +89,7 @@ def test_analysis_cap_is_enforced_and_loop_abandons():
     assert env.steps == []  # never acted
     assert used.calls <= MAX_CALLS_PER_ACTION
     assert any("analysis limit" in e for e in steps[0].invalid_attempts)
-    assert len(steps[0].analysis_code) == 4  # only the allowed calls ran
+    assert len(steps[0].analysis_code) == 6  # only the allowed calls ran, even after escalation
 
 
 def test_identical_replies_are_rejected():
@@ -86,5 +97,5 @@ def test_identical_replies_are_rejected():
     llm = FakeLLM([same] * 10)
     env = ArcEnv("ls20", seed=0, offline=True)
     steps, used = StudentAgent(llm, log=lambda *_: None).play(env, max_levels=None)
-    assert used.calls == 4  # first runs, then three identical replies -> give up
+    assert used.calls == 7  # runs once, 3 identical, escalation, 3 identical, give up
     assert len(steps[0].analysis_code) == 1

@@ -52,9 +52,9 @@ COST_CAP_USD: float = 10.00
 
 # Student loop knobs. These belong to the referee (fixed across runs), not to the harness.
 MAX_TOKENS: int = 2048  # JSON replies are short; raised automatically when reasoning is on
-MAX_ANALYSIS_CALLS_PER_ACTION: int = 4  # free REPL calls before the student must act
+MAX_ANALYSIS_CALLS_PER_ACTION: int = 6  # free REPL calls before the student must act
 MAX_BAD_REPLIES: int = 3  # unparseable / invalid / repeated replies in a row before the episode is abandoned
-MAX_CALLS_PER_ACTION: int = MAX_ANALYSIS_CALLS_PER_ACTION + MAX_BAD_REPLIES + 1  # hard stop per env step
+MAX_CALLS_PER_ACTION: int = MAX_ANALYSIS_CALLS_PER_ACTION + 2 * MAX_BAD_REPLIES + 2  # hard stop per env step
 HISTORY_WINDOW: int = 6  # past env steps kept verbatim in the prompt
 RETRY_TEMPERATURE: float = 0.7  # after a bad reply; breaks deterministic repeat loops
 

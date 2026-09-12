@@ -181,15 +181,24 @@ class StudentAgent:
             analysis_calls = 0
             acted = False
             last_text = None
+            escalated = False
 
             while not acted:
-                if step.llm_calls >= MAX_CALLS_PER_ACTION:
-                    # Hard stop: the model would not act. Abandon rather than spend without bound.
-                    step.invalid_attempts.append(f"{MAX_CALLS_PER_ACTION} calls without an action")
+                stuck = bad_replies >= MAX_BAD_REPLIES or step.llm_calls >= MAX_CALLS_PER_ACTION
+                if stuck and not escalated:
+                    # The model will not act inside this step's context. Drop that context and ask once more,
+                    # plainly, before abandoning the game: one lost step is far cheaper than a lost game.
+                    escalated = True
+                    bad_replies = 0
+                    step.invalid_attempts.append("escalated: fresh context, action demanded")
+                    demand = observation + "\n\nAnalysis for this step is over. Reply with an ACTION JSON object only."
+                    messages = system + history[-2 * self.history_window:] + [{"role": "user", "content": demand}]
+                elif stuck:
+                    step.invalid_attempts.append(f"{step.llm_calls} calls without an action")
                     steps.append(step)
-                    self.log(f"  giving up: {MAX_CALLS_PER_ACTION} LLM calls without an action")
+                    self.log(f"  giving up: {step.llm_calls} LLM calls without an action")
                     return steps, used
-                resp = self.llm.chat(messages, temperature=RETRY_TEMPERATURE if bad_replies else None)
+                resp = self.llm.chat(messages, temperature=RETRY_TEMPERATURE if bad_replies or escalated else None)
                 used.add(resp.usage)
                 step.llm_calls += 1
                 step.input_tokens += resp.usage.input_tokens
@@ -205,10 +214,6 @@ class StudentAgent:
                     bad_replies += 1
                     err = "reply was cut off by the length limit; keep hypothesis short" if resp.truncated else reply.error
                     step.invalid_attempts.append(err)
-                    if bad_replies >= MAX_BAD_REPLIES:
-                        steps.append(step)
-                        self.log(f"  giving up: {MAX_BAD_REPLIES} bad replies in a row")
-                        return steps, used
                     messages += [{"role": "assistant", "content": resp.text}, {"role": "user", "content": f"Invalid reply ({err}). Send one JSON object as specified."}]
                     continue
                 bad_replies = 0
@@ -234,10 +239,6 @@ class StudentAgent:
                 except InvalidAction as e:
                     bad_replies += 1
                     step.invalid_attempts.append(str(e))
-                    if bad_replies >= MAX_BAD_REPLIES:
-                        steps.append(step)
-                        self.log(f"  giving up: {MAX_BAD_REPLIES} invalid actions in a row")
-                        return steps, used
                     messages += [{"role": "assistant", "content": resp.text}, {"role": "user", "content": f"Invalid action: {e}"}]
                     continue
                 bad_replies = 0
