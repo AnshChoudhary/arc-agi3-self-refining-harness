@@ -18,8 +18,11 @@ from arc_harness.repl import HARNESS_DIR, Repl
 from arc_harness.trajectory import AgentStep
 from config.models import (
     EST_CALLS_PER_ACTION,
+    EST_CALLS_PER_ACTION_REASONING,
     EST_INPUT_TOKENS_PER_CALL,
+    EST_INPUT_TOKENS_PER_CALL_REASONING,
     EST_OUTPUT_TOKENS_PER_CALL,
+    EST_OUTPUT_TOKENS_PER_CALL_REASONING,
     HISTORY_WINDOW,
     MAX_ANALYSIS_CALLS_PER_ACTION,
     MAX_BAD_REPLIES,
@@ -149,8 +152,12 @@ class StudentAgent:
         self.log = log
 
     def estimate_usage(self, total_action_budget: int) -> Usage:
-        calls = int(total_action_budget * EST_CALLS_PER_ACTION)
-        return Usage(input_tokens=calls * EST_INPUT_TOKENS_PER_CALL, output_tokens=calls * EST_OUTPUT_TOKENS_PER_CALL, calls=calls)
+        reasoning = getattr(self.llm, "effort", "none") != "none"
+        per_action = EST_CALLS_PER_ACTION_REASONING if reasoning else EST_CALLS_PER_ACTION
+        tok_in = EST_INPUT_TOKENS_PER_CALL_REASONING if reasoning else EST_INPUT_TOKENS_PER_CALL
+        tok_out = EST_OUTPUT_TOKENS_PER_CALL_REASONING if reasoning else EST_OUTPUT_TOKENS_PER_CALL
+        calls = int(total_action_budget * per_action)
+        return Usage(input_tokens=calls * tok_in, output_tokens=calls * tok_out, calls=calls)
 
     # ---- the loop -----------------------------------------------------------
 

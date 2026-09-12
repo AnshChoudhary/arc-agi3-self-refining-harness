@@ -8,6 +8,7 @@ the coach may only ever open the former.
 from __future__ import annotations
 
 import json
+import subprocess
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from importlib.metadata import version
@@ -43,6 +44,7 @@ class Trajectory:
     seed: int
     model: str | None
     harness_snapshot: str | None
+    code_version: str  # git commit of the loop that produced this trajectory
     budget_multiplier: int
     toolkit: dict[str, str]
     started_at: str
@@ -56,6 +58,15 @@ class Trajectory:
 
     def to_json(self) -> str:
         return json.dumps(asdict(self), indent=1)
+
+
+def code_version() -> str:
+    try:
+        out = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=PROJECT_ROOT, capture_output=True, text=True, timeout=5)
+        dirty = subprocess.run(["git", "status", "--porcelain", "--untracked-files=no"], cwd=PROJECT_ROOT, capture_output=True, text=True, timeout=5)
+        return out.stdout.strip() + ("+dirty" if dirty.stdout.strip() else "")
+    except Exception:
+        return "unknown"
 
 
 def load_split() -> dict[str, list[str]]:
@@ -92,6 +103,7 @@ def build(
         seed=env.seed,
         model=model,
         harness_snapshot=harness_snapshot,
+        code_version=code_version(),
         budget_multiplier=env.budget_multiplier,
         toolkit={"arc-agi": version("arc-agi"), "arcengine": version("arcengine")},
         started_at=started.isoformat(),

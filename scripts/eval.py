@@ -27,7 +27,7 @@ from arc_harness.llm import CostCapExceeded, LLMClient, Usage
 from arc_harness.repl import harness_fingerprint
 from arc_harness.scoring import GameScore, game_score, rhae
 from arc_harness.student import StudentAgent
-from arc_harness.trajectory import SPLIT_FILE, build, load_split, save
+from arc_harness.trajectory import SPLIT_FILE, build, code_version, load_split, save
 from config.budget import BUDGET_MULTIPLIER, level_budget
 from config.models import COST_CAP_USD, DEFAULT_EFFORT, DEFAULT_MODEL, EFFORTS, MODELS, ModelSpec, get_model
 
@@ -224,6 +224,7 @@ def main() -> None:
         "model": model.name if model else None,
         "effort": args.effort if model else None,
         "harness_snapshot": f"{args.harness}@{harness_fingerprint()}",
+        "code_version": code_version(),
         "split_file_sha1": hashlib.sha1(SPLIT_FILE.read_bytes()).hexdigest()[:12],
         "split_seed": load_split()["seed"],
         "env_seed": args.seed,
