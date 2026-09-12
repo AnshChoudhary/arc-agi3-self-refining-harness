@@ -20,6 +20,7 @@ from arc_harness.env import PROJECT_ROOT
 from config.models import EFFORTS, MAX_TOKENS, ModelSpec
 
 CACHE_DIR = PROJECT_ROOT / ".llm_cache"
+RATE_LIMIT_MAX_WAIT_S = 600.0  # total back-off before a 429 becomes an error
 
 
 @dataclass
@@ -86,6 +87,21 @@ class LLMClient:
         self.budget_usd = budget_usd
         self._client = OpenAI(base_url=model.base_url, api_key=key, max_retries=4, timeout=180)
 
+    def _create_with_backoff(self, kwargs: dict):
+        """The provider caps concurrent requests per model; a 429 means wait, not fail."""
+        from openai import RateLimitError
+
+        delay, waited = 1.0, 0.0
+        while True:
+            try:
+                return self._client.chat.completions.create(**kwargs)
+            except RateLimitError as e:
+                if waited >= RATE_LIMIT_MAX_WAIT_S:
+                    raise
+                time.sleep(delay)
+                waited += delay
+                delay = min(delay * 2, 30.0)
+
     def _cache_path(self, payload: dict) -> Path:
         digest = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
         return CACHE_DIR / self.model.name / f"{digest}.json"
@@ -120,7 +136,7 @@ class LLMClient:
         if json_mode:
             kwargs["response_format"] = {"type": "json_object"}
         t0 = time.perf_counter()
-        resp = self._client.chat.completions.create(**kwargs)
+        resp = self._create_with_backoff(kwargs)
         latency = time.perf_counter() - t0
 
         choice = resp.choices[0]

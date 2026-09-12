@@ -1,0 +1,94 @@
+{
+ "trajectory_id": "sk48-d8078629_student_20260912T190725Z",
+ "game_id": "sk48-d8078629",
+ "split": "refine",
+ "agent": "student",
+ "seed": 0,
+ "model": "deepseek-v4-flash",
+ "harness_snapshot": "current@bc653ad4e040",
+ "budget_multiplier": 5,
+ "toolkit": {
+  "arc-agi": "0.9.9",
+  "arcengine": "0.9.3"
+ },
+ "started_at": "2026-09-12T19:07:25.751100+00:00",
+ "baselines": [
+  61,
+  177,
+  101,
+  103,
+  230,
+  181,
+  125,
+  92
+ ],
+ "env_steps": [
+  {
+   "index": 1,
+   "level": 0,
+   "action": "ACTION1",
+   "data": {},
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 1,
+   "budget_this_level": 305,
+   "n_frames": 2,
+   "frame_hash": "8702da8b2906f456",
+   "changed_pixels": 96,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 2,
+   "level": 0,
+   "action": "ACTION2",
+   "data": {},
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 2,
+   "budget_this_level": 305,
+   "n_frames": 2,
+   "frame_hash": "99a47e2a873b9036",
+   "changed_pixels": 96,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 3,
+   "level": 0,
+   "action": "ACTION3",
+   "data": {},
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 3,
+   "budget_this_level": 305,
+   "n_frames": 2,
+   "frame_hash": "aa2905f8dfac4016",
+   "changed_pixels": 12,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 4,
+   "level": 0,
+   "action": "ACTION4",
+   "data": {},
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 4,
+   "budget_this_level": 305,
+   "n_frames": 2,
+   "frame_hash": "920b1697ed135e79",
+   "changed_pixels": 13,
+   "level_changed": false,
+   "full_reset": false
+  }
+ ],
+ "agent_steps": [],
+ "outcome": null,
+ "levels_completed": 0,
+ "level_actions": [
+  4
+ ],
+ "score": 0.0
+}

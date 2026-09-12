@@ -48,7 +48,7 @@ DEFAULT_EFFORT: str = "none"
 EFFORTS = ("none", "high", "max")
 
 # scripts/eval.py prints the projected cost and aborts above this.
-COST_CAP_USD: float = 5.00
+COST_CAP_USD: float = 10.00
 
 # Student loop knobs. These belong to the referee (fixed across runs), not to the harness.
 MAX_TOKENS: int = 2048  # JSON replies are short; raised automatically when reasoning is on
@@ -58,10 +58,12 @@ MAX_CALLS_PER_ACTION: int = MAX_ANALYSIS_CALLS_PER_ACTION + MAX_BAD_REPLIES + 1 
 HISTORY_WINDOW: int = 6  # past env steps kept verbatim in the prompt
 RETRY_TEMPERATURE: float = 0.7  # after a bad reply; breaks deterministic repeat loops
 
-# Cost projection (upper bound per budgeted action; the loop usually acts well under budget).
-EST_CALLS_PER_ACTION: float = 1 + MAX_ANALYSIS_CALLS_PER_ACTION / 2
-EST_INPUT_TOKENS_PER_CALL: int = 7_000
-EST_OUTPUT_TOKENS_PER_CALL: int = 300
+# Cost projection per budgeted action. Calibrated on the first full-budget student run
+# (ls20 level 1, effort none: 139 calls / 110 actions, 6.4k in + 145 out tokens per call);
+# a 1.5x margin is applied. Reasoning effort adds output tokens on top.
+EST_CALLS_PER_ACTION: float = 1.9
+EST_INPUT_TOKENS_PER_CALL: int = 6_500
+EST_OUTPUT_TOKENS_PER_CALL: int = 250
 
 
 def get_model(key: str = DEFAULT_MODEL) -> ModelSpec:
