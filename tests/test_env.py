@@ -38,3 +38,12 @@ def test_budget_ends_episode():
         env.step("ACTION1")
     res = env.result()
     assert res.level_actions == [budget] and res.levels_completed == 0
+
+
+def test_flat_action_cap_under_budget():
+    env = ArcEnv(GAME, seed=0, max_actions_per_level=3)
+    assert env.budget_this_level == 3  # 5 x 22 = 110, capped
+    for _ in range(3):
+        obs = env.step("ACTION1")
+    assert obs.done and obs.outcome == OUTCOME_BUDGET
+    assert env.steps[-1].budget_this_level == 3

@@ -155,6 +155,7 @@ class ArcEnv:
         seed: int = 0,
         offline: bool | None = None,
         budget_multiplier: int = BUDGET_MULTIPLIER,
+        max_actions_per_level: int | None = None,
     ) -> None:
         if offline is None:
             offline = _is_downloaded(game_id)
@@ -170,6 +171,8 @@ class ArcEnv:
         self.seed = seed
         self.baselines: list[int] = list(info.baseline_actions)
         self.budget_multiplier = budget_multiplier
+        # Optional ceiling under the 5x rule, for cheaper scans. Recorded in every trajectory/results row.
+        self.max_actions_per_level = max_actions_per_level
 
         self.frames: list[np.ndarray] = []  # last frame of every step, index 0 = initial
         self.steps: list[Step] = []
@@ -198,9 +201,13 @@ class ArcEnv:
     def state(self) -> str:
         return self._last.state.value
 
+    def _budget(self, level: int) -> int:
+        b = level_budget(self.baselines[min(level, len(self.baselines) - 1)], self.budget_multiplier)
+        return min(b, self.max_actions_per_level) if self.max_actions_per_level else b
+
     @property
     def budget_this_level(self) -> int:
-        return level_budget(self.baselines[self.level], self.budget_multiplier)
+        return self._budget(self.level)
 
     @property
     def available_actions(self) -> list[str]:
@@ -275,7 +282,7 @@ class ArcEnv:
         level_changed = raw.levels_completed > prev_completed
         # Bill the completing action to the level it completed.
         billed_level = prev_completed
-        budget = level_budget(self.baselines[min(billed_level, len(self.baselines) - 1)], self.budget_multiplier)
+        budget = self._budget(billed_level)
 
         if level_changed:
             self.level_actions.append(self.actions_this_level)

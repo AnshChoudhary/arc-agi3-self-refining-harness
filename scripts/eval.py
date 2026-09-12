@@ -71,6 +71,7 @@ class GameSpec:
     env_seed: int
     offline: bool | None
     max_levels: int | None
+    max_actions_per_level: int | None
     harness: str
     started_iso: str
 
@@ -79,7 +80,7 @@ def run_game(spec: GameSpec) -> dict:
     """Play one game to completion (or abort) and save its trajectory. Runs in a worker process."""
     model = get_model(spec.model_key) if spec.model_key else None
     agent = make_agent(spec.agent, model, spec.effort, spec.agent_seed, spec.use_cache)
-    env = ArcEnv(spec.game_id, seed=spec.env_seed, offline=spec.offline)
+    env = ArcEnv(spec.game_id, seed=spec.env_seed, offline=spec.offline, max_actions_per_level=spec.max_actions_per_level)
     tag = env.game_id.split("-")[0]
     log = lambda msg: print(f"[{tag}]{msg}", flush=True)  # noqa: E731
     if isinstance(agent, StudentAgent):
@@ -134,12 +135,14 @@ def select_games(which: str, only: list[str] | None) -> list[str]:
 
 
 def project_cost(agent: Agent, games: list[str], model: ModelSpec | None, max_levels: int | None,
-                 multiplier: int, offline: bool | None) -> tuple[int, Usage, float]:
+                 multiplier: int, offline: bool | None, cap: int | None = None) -> tuple[int, Usage, float]:
     total_budget = 0
     for g in games:
         bl = baselines_for(g, offline)
         levels = bl if max_levels is None else bl[:max_levels]
-        total_budget += sum(level_budget(b, multiplier) for b in levels)
+        for b in levels:
+            lb = level_budget(b, multiplier)
+            total_budget += min(lb, cap) if cap else lb
     usage = agent.estimate_usage(total_budget)
     return total_budget, usage, usage.cost_usd(model)
 
@@ -158,6 +161,8 @@ def main() -> None:
     ap.add_argument("--seed", type=int, default=0, help="environment seed")
     ap.add_argument("--agent-seed", type=int, default=0)
     ap.add_argument("--max-levels", type=int, default=None, help="stop each game after N levels")
+    ap.add_argument("--max-actions-per-level", type=int, default=None,
+                    help="ceiling under the 5x-human budget (cheaper scans); recorded in the results row")
     ap.add_argument("--offline", action="store_true", help="never contact the ARC API")
     ap.add_argument("--jobs", type=int, default=1, help="games played concurrently (separate processes)")
     ap.add_argument("--dry-run", action="store_true", help="print the cost projection and exit")
@@ -168,7 +173,8 @@ def main() -> None:
     agent = make_agent(args.agent, model, args.effort, args.agent_seed, not args.no_llm_cache)
     games = select_games(args.set, args.games.split(",") if args.games else None)
 
-    total_budget, est, est_usd = project_cost(agent, games, model, args.max_levels, BUDGET_MULTIPLIER, offline)
+    total_budget, est, est_usd = project_cost(agent, games, model, args.max_levels, BUDGET_MULTIPLIER, offline,
+                                              args.max_actions_per_level)
     print(f"{len(games)} games ({args.set}), agent={agent.name}, model={model.name if model else '-'}, "
           f"effort={args.effort if model else '-'}, harness={args.harness}@{harness_fingerprint()}")
     print(f"projected: <= {total_budget} env actions, ~{est.input_tokens + est.output_tokens} tokens, "
@@ -184,7 +190,8 @@ def main() -> None:
     started = datetime.now(timezone.utc)
     t0 = time.perf_counter()
     specs = [GameSpec(g, args.agent, args.model if model else None, args.effort, args.agent_seed,
-                      not args.no_llm_cache, args.seed, offline, args.max_levels, args.harness, started.isoformat())
+                      not args.no_llm_cache, args.seed, offline, args.max_levels, args.max_actions_per_level,
+                      args.harness, started.isoformat())
              for g in games]
     rows: list[GameRow] = []
     scores: list[GameScore] = []
@@ -231,6 +238,7 @@ def main() -> None:
         "agent_seed": args.agent_seed,
         "budget_multiplier": BUDGET_MULTIPLIER,
         "max_levels": args.max_levels,
+        "max_actions_per_level": args.max_actions_per_level,
         "jobs": args.jobs,
         "toolkit": {"arc-agi": version("arc-agi"), "arcengine": version("arcengine")},
         "argv": sys.argv[1:],

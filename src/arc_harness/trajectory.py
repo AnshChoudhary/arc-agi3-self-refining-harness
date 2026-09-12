@@ -46,6 +46,7 @@ class Trajectory:
     harness_snapshot: str | None
     code_version: str  # git commit of the loop that produced this trajectory
     budget_multiplier: int
+    max_actions_per_level: int | None
     toolkit: dict[str, str]
     started_at: str
     baselines: list[int]
@@ -105,6 +106,7 @@ def build(
         harness_snapshot=harness_snapshot,
         code_version=code_version(),
         budget_multiplier=env.budget_multiplier,
+        max_actions_per_level=env.max_actions_per_level,
         toolkit={"arc-agi": version("arc-agi"), "arcengine": version("arcengine")},
         started_at=started.isoformat(),
         baselines=env.baselines,
