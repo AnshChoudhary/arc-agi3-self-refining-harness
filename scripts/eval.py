@@ -16,6 +16,7 @@ import json
 import signal
 import sys
 import time
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from importlib.metadata import version
@@ -55,6 +56,66 @@ def make_agent(name: str, model: ModelSpec | None, effort: str, agent_seed: int,
         assert model is not None
         return StudentAgent(LLMClient(model, effort=effort, use_cache=use_cache, budget_usd=COST_CAP_USD))
     raise SystemExit(f"unknown agent {name!r}")
+
+
+@dataclass
+class GameSpec:
+    """Everything a worker process needs to play one game; picklable."""
+
+    game_id: str
+    agent: str
+    model_key: str | None
+    effort: str
+    agent_seed: int
+    use_cache: bool
+    env_seed: int
+    offline: bool | None
+    max_levels: int | None
+    harness: str
+    started_iso: str
+
+
+def run_game(spec: GameSpec) -> dict:
+    """Play one game to completion (or abort) and save its trajectory. Runs in a worker process."""
+    model = get_model(spec.model_key) if spec.model_key else None
+    agent = make_agent(spec.agent, model, spec.effort, spec.agent_seed, spec.use_cache)
+    env = ArcEnv(spec.game_id, seed=spec.env_seed, offline=spec.offline)
+    tag = env.game_id.split("-")[0]
+    log = lambda msg: print(f"[{tag}]{msg}", flush=True)  # noqa: E731
+    if isinstance(agent, StudentAgent):
+        agent.log = log
+    log(f" baselines={env.baselines} actions={env.available_actions}")
+
+    aborted = None
+    try:
+        agent_steps, used = agent.play(env, spec.max_levels)
+    except (CostCapExceeded, KeyboardInterrupt, Exception) as e:  # keep what we have; the row says why
+        aborted = type(e).__name__
+        agent_steps, used = [], Usage()
+        log(f" aborted: {aborted}: {e}")
+        if not isinstance(e, (CostCapExceeded, KeyboardInterrupt)):
+            import traceback
+            traceback.print_exc()
+    if isinstance(agent, StudentAgent):
+        used = agent.llm.usage  # authoritative, includes calls made before an abort
+
+    res = env.result()
+    gs = game_score(res.game_id, res.baselines, res.level_actions, res.levels_completed)
+    started = datetime.fromisoformat(spec.started_iso)
+    path = save(build(env, agent.name, agent_steps, gs.score, model.name if model else None,
+                      f"{spec.harness}@{harness_fingerprint()}", started))
+    if aborted:
+        outcome = f"aborted_{aborted}"
+    elif res.outcome is None:  # env.done is False: either we stopped it or the agent gave up
+        hit_cap = spec.max_levels is not None and res.levels_completed >= spec.max_levels
+        outcome = "stopped_max_levels" if hit_cap else "agent_gave_up"
+    else:
+        outcome = res.outcome
+    row = GameRow(res.game_id, gs.score, res.levels_completed, outcome, res.level_actions,
+                  res.baselines, str(path.relative_to(PROJECT_ROOT)), used.input_tokens, used.output_tokens)
+    log(f" score={gs.score:.3f} levels={res.levels_completed}/{len(res.baselines)} "
+        f"actions={res.level_actions} outcome={outcome} cost=${used.cost_usd(model):.4f}")
+    return {"row": row, "score": gs, "usage": used, "aborted": aborted}
 
 
 def select_games(which: str, only: list[str] | None) -> list[str]:
@@ -98,6 +159,7 @@ def main() -> None:
     ap.add_argument("--agent-seed", type=int, default=0)
     ap.add_argument("--max-levels", type=int, default=None, help="stop each game after N levels")
     ap.add_argument("--offline", action="store_true", help="never contact the ARC API")
+    ap.add_argument("--jobs", type=int, default=1, help="games played concurrently (separate processes)")
     ap.add_argument("--dry-run", action="store_true", help="print the cost projection and exit")
     args = ap.parse_args()
 
@@ -121,40 +183,35 @@ def main() -> None:
 
     started = datetime.now(timezone.utc)
     t0 = time.perf_counter()
+    specs = [GameSpec(g, args.agent, args.model if model else None, args.effort, args.agent_seed,
+                      not args.no_llm_cache, args.seed, offline, args.max_levels, args.harness, started.isoformat())
+             for g in games]
     rows: list[GameRow] = []
     scores: list[GameScore] = []
     usage = Usage()
-    for g in games:
-        env = ArcEnv(g, seed=args.seed, offline=offline)
-        print(f"  {env.game_id}: baselines={env.baselines} actions={env.available_actions}", flush=True)
-        aborted = None
-        try:
-            agent_steps, used = agent.play(env, args.max_levels)
-        except (CostCapExceeded, KeyboardInterrupt) as e:  # keep what we have; the row says it was cut short
-            aborted = type(e).__name__
-            agent_steps, used = [], Usage()
-            print(f"  aborted: {aborted}: {e}", flush=True)
-        if isinstance(agent, StudentAgent):
-            used = agent.llm.usage  # authoritative, includes calls made before an abort
-        usage.add(used)
-        res = env.result()
-        gs = game_score(res.game_id, res.baselines, res.level_actions, res.levels_completed)
-        scores.append(gs)
-        path = save(build(env, agent.name, agent_steps, gs.score, model.name if model else None,
-                          f"{args.harness}@{harness_fingerprint()}", started))
-        if aborted:
-            outcome = f"aborted_{aborted}"
-        elif res.outcome is None:  # env.done is False: either we stopped it or the agent gave up
-            hit_cap = args.max_levels is not None and res.levels_completed >= args.max_levels
-            outcome = "stopped_max_levels" if hit_cap else "agent_gave_up"
-        else:
-            outcome = res.outcome
-        rows.append(GameRow(res.game_id, gs.score, res.levels_completed, outcome, res.level_actions,
-                            res.baselines, str(path.relative_to(PROJECT_ROOT)), used.input_tokens, used.output_tokens))
-        print(f"  {res.game_id:<14} score={gs.score:.3f} levels={res.levels_completed}/{len(res.baselines)} "
-              f"actions={res.level_actions} outcome={outcome} cost=${used.cost_usd(model):.4f}", flush=True)
-        if aborted:
-            break
+
+    def collect(result: dict) -> None:
+        rows.append(result["row"])
+        scores.append(result["score"])
+        usage.add(result["usage"])
+
+    if args.jobs <= 1:
+        for spec in specs:
+            collect(run_game(spec))
+            if rows[-1].outcome.startswith("aborted_"):
+                break
+    else:
+        # One process per game; each builds its own agent and LLM client. Ctrl-C loses in-flight games.
+        with ProcessPoolExecutor(max_workers=args.jobs) as pool:
+            futures = [pool.submit(run_game, spec) for spec in specs]
+            try:
+                for fut in as_completed(futures):
+                    collect(fut.result())
+            except KeyboardInterrupt:
+                pool.shutdown(cancel_futures=True)
+                print(f"interrupted: {len(rows)}/{len(specs)} games finished; in-flight games were lost", flush=True)
+        rows.sort(key=lambda r: r.game_id)
+        scores.sort(key=lambda g: g.game_id)
 
     total = rhae(scores)
     run_id = f"{started.strftime('%Y%m%dT%H%M%SZ')}_{args.set}_{agent.name}"
@@ -173,6 +230,7 @@ def main() -> None:
         "agent_seed": args.agent_seed,
         "budget_multiplier": BUDGET_MULTIPLIER,
         "max_levels": args.max_levels,
+        "jobs": args.jobs,
         "toolkit": {"arc-agi": version("arc-agi"), "arcengine": version("arcengine")},
         "argv": sys.argv[1:],
         "rhae": total,

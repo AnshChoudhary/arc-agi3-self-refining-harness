@@ -78,8 +78,9 @@ class LLMClient:
         self.model = model
         self.effort = effort
         self.use_cache = use_cache
-        # Reasoning shares max_tokens with the answer; leave room for both.
-        self.max_tokens = max_tokens if effort == "none" else max(max_tokens, 8192)
+        # Reasoning shares max_tokens with the answer; leave room for both. (thinking_token_budget
+        # is rejected by this model's backend, so max_tokens is the only ceiling.)
+        self.max_tokens = max_tokens if effort == "none" else max(max_tokens, 16384)
         self.temperature = temperature
         self.usage = Usage()
         self.budget_usd = budget_usd
@@ -118,9 +119,6 @@ class LLMClient:
         }
         if json_mode:
             kwargs["response_format"] = {"type": "json_object"}
-        if self.effort != "none":
-            kwargs["extra_body"] = {"thinking_token_budget": self.max_tokens - 1500}
-
         t0 = time.perf_counter()
         resp = self._client.chat.completions.create(**kwargs)
         latency = time.perf_counter() - t0
