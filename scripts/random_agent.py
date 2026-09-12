@@ -1,41 +1,17 @@
-"""M0 sanity baseline: uniform random actions until the budget kills the run.
+"""M0 sanity baseline on one game: uniform random actions until the budget kills the run.
 
-Expected RHAE ~0. Exercises env.py budget enforcement, trajectory logging, and
-scoring end to end without spending a single LLM token.
+Expected RHAE ~0. For a whole set, use scripts/eval.py --agent random.
 """
 
 from __future__ import annotations
 
 import argparse
-import random
 from datetime import datetime, timezone
 
-from arc_harness.env import ArcEnv, InvalidAction
+from arc_harness.agents import RandomAgent
+from arc_harness.env import ArcEnv
 from arc_harness.scoring import game_score
-from arc_harness.trajectory import AgentStep, build, save
-
-
-def play(env: ArcEnv, rng: random.Random, max_levels: int | None) -> list[AgentStep]:
-    agent_steps: list[AgentStep] = []
-    while not env.done:
-        if max_levels is not None and env.levels_completed >= max_levels:
-            break
-        obs = env.observe()
-        if obs.state == "GAME_OVER":
-            env.reset()
-            agent_steps.append(AgentStep(hypothesis="game over -> reset"))
-            continue
-        action = rng.choice(obs.available_actions)
-        try:
-            if action == "ACTION6":
-                env.step(action, x=rng.randrange(64), y=rng.randrange(64))
-            else:
-                env.step(action)
-        except InvalidAction as e:  # should not happen for random-from-available
-            agent_steps.append(AgentStep(invalid_attempts=[str(e)]))
-            continue
-        agent_steps.append(AgentStep())
-    return agent_steps
+from arc_harness.trajectory import build, save
 
 
 def main() -> None:
@@ -52,7 +28,7 @@ def main() -> None:
     print(f"{env.game_id}: {len(env.baselines)} levels, baselines={env.baselines}, "
           f"actions={env.available_actions}, level-0 budget={env.budget_this_level}")
 
-    agent_steps = play(env, random.Random(args.agent_seed), args.max_levels)
+    agent_steps, _ = RandomAgent(args.agent_seed).play(env, args.max_levels)
     res = env.result()
     gs = game_score(res.game_id, res.baselines, res.level_actions, res.levels_completed)
 

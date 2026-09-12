@@ -1,17 +1,17 @@
 {
- "trajectory_id": "vc33-5430563c_random_20260912T174540Z",
+ "trajectory_id": "vc33-5430563c_random_20260912T175420Z",
  "game_id": "vc33-5430563c",
  "split": "refine",
  "agent": "random",
  "seed": 0,
  "model": null,
- "harness_snapshot": null,
+ "harness_snapshot": "current@da39a3ee5e6b",
  "budget_multiplier": 5,
  "toolkit": {
   "arc-agi": "0.9.9",
   "arcengine": "0.9.3"
  },
- "started_at": "2026-09-12T17:45:40.851965+00:00",
+ "started_at": "2026-09-12T17:54:20.827719+00:00",
  "baselines": [
   7,
   18,
@@ -27,8 +27,8 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 8,
-    "y": 32
+    "x": 37,
+    "y": 60
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
@@ -45,8 +45,8 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 63,
-    "y": 57
+    "x": 34,
+    "y": 23
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
@@ -63,8 +63,8 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 48,
-    "y": 26
+    "x": 51,
+    "y": 28
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
@@ -81,8 +81,8 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 62,
-    "y": 3
+    "x": 39,
+    "y": 12
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
@@ -99,8 +99,8 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 55,
-    "y": 0
+    "x": 6,
+    "y": 54
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
@@ -117,8 +117,8 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 34,
-    "y": 29
+    "x": 14,
+    "y": 15
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
@@ -135,16 +135,16 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 40,
-    "y": 3
+    "x": 60,
+    "y": 24
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 7,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "d9888151497a6d90",
-   "changed_pixels": 1,
+   "frame_hash": "06dd6a7b92825cfc",
+   "changed_pixels": 265,
    "level_changed": false,
    "full_reset": false
   },
@@ -153,15 +153,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 3,
-    "y": 1
+    "x": 9,
+    "y": 34
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 8,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "580beb9490d5598c",
+   "frame_hash": "45a8f79293d2060d",
    "changed_pixels": 1,
    "level_changed": false,
    "full_reset": false
@@ -171,15 +171,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 27,
-    "y": 54
+    "x": 13,
+    "y": 58
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 9,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "bc2e2cccf06a4630",
+   "frame_hash": "15b27c9afecfd53d",
    "changed_pixels": 2,
    "level_changed": false,
    "full_reset": false
@@ -189,15 +189,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 28,
-    "y": 56
+    "x": 27,
+    "y": 35
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 10,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "50d8455c9ccc83c5",
+   "frame_hash": "84b8d7e1a5d492e6",
    "changed_pixels": 1,
    "level_changed": false,
    "full_reset": false
@@ -207,15 +207,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 29,
-    "y": 44
+    "x": 34,
+    "y": 20
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 11,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "17238e24408bb1df",
+   "frame_hash": "46c23a54cdd380ea",
    "changed_pixels": 1,
    "level_changed": false,
    "full_reset": false
@@ -225,15 +225,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 28,
-    "y": 58
+    "x": 4,
+    "y": 26
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 12,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "14b9d6b93ef55655",
+   "frame_hash": "0b5b2676cc014a45",
    "changed_pixels": 1,
    "level_changed": false,
    "full_reset": false
@@ -243,15 +243,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 2,
-    "y": 53
+    "x": 7,
+    "y": 37
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 13,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "43f8b7c240d93f10",
+   "frame_hash": "7cb5000ddbf04bb5",
    "changed_pixels": 2,
    "level_changed": false,
    "full_reset": false
@@ -261,15 +261,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 23,
-    "y": 37
+    "x": 8,
+    "y": 15
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 14,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "a9fddaaa748094aa",
+   "frame_hash": "37e70f206081b8f2",
    "changed_pixels": 1,
    "level_changed": false,
    "full_reset": false
@@ -279,15 +279,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 42,
-    "y": 54
+    "x": 11,
+    "y": 45
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 15,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "7459fbfa803a2782",
+   "frame_hash": "57bc4f2b281a9349",
    "changed_pixels": 1,
    "level_changed": false,
    "full_reset": false
@@ -297,15 +297,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 38,
-    "y": 36
+    "x": 62,
+    "y": 55
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 16,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "7adbc441c725d874",
+   "frame_hash": "130ef68ae3972e61",
    "changed_pixels": 1,
    "level_changed": false,
    "full_reset": false
@@ -315,15 +315,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 50,
-    "y": 4
+    "x": 12,
+    "y": 34
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 17,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "913d4f72a070636b",
+   "frame_hash": "25575d4d4a7b5411",
    "changed_pixels": 2,
    "level_changed": false,
    "full_reset": false
@@ -333,15 +333,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 31,
-    "y": 51
+    "x": 9,
+    "y": 33
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 18,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "90868a7468276d45",
+   "frame_hash": "4c85fecffb32ef32",
    "changed_pixels": 1,
    "level_changed": false,
    "full_reset": false
@@ -351,15 +351,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 22,
-    "y": 46
+    "x": 4,
+    "y": 6
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 19,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "77bd606c6bc6fd7f",
+   "frame_hash": "e52cd1de47f4c633",
    "changed_pixels": 1,
    "level_changed": false,
    "full_reset": false
@@ -369,15 +369,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 11,
-    "y": 56
+    "x": 35,
+    "y": 25
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 20,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "f3899e1d03cebf03",
+   "frame_hash": "31cabef75c0091b8",
    "changed_pixels": 2,
    "level_changed": false,
    "full_reset": false
@@ -387,15 +387,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 20,
-    "y": 50
+    "x": 37,
+    "y": 8
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 21,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "369726fe9e6bea52",
+   "frame_hash": "20b2e8da5ecb5c48",
    "changed_pixels": 1,
    "level_changed": false,
    "full_reset": false
@@ -405,15 +405,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 62,
-    "y": 3
+    "x": 1,
+    "y": 38
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 22,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "64e4f88631b1a33f",
+   "frame_hash": "b68e2c1a4a8e877b",
    "changed_pixels": 1,
    "level_changed": false,
    "full_reset": false
@@ -423,15 +423,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 5,
-    "y": 39
+    "x": 36,
+    "y": 46
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 23,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "ecc217316df64883",
+   "frame_hash": "94c823f79562d248",
    "changed_pixels": 1,
    "level_changed": false,
    "full_reset": false
@@ -441,15 +441,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 21,
-    "y": 21
+    "x": 46,
+    "y": 55
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 24,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "88a64628599b9975",
+   "frame_hash": "6ea8fa70743676b0",
    "changed_pixels": 2,
    "level_changed": false,
    "full_reset": false
@@ -459,15 +459,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 1,
-    "y": 25
+    "x": 15,
+    "y": 51
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 25,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "5f355780f3b17c0e",
+   "frame_hash": "f599b41cb0e5751e",
    "changed_pixels": 1,
    "level_changed": false,
    "full_reset": false
@@ -477,15 +477,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 51,
-    "y": 44
+    "x": 12,
+    "y": 62
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 26,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "0166d0e876071c1a",
+   "frame_hash": "7a8c2825348cbb34",
    "changed_pixels": 1,
    "level_changed": false,
    "full_reset": false
@@ -495,15 +495,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 58,
-    "y": 34
+    "x": 23,
+    "y": 18
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 27,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "718660399be59dbf",
+   "frame_hash": "ce3bf004ac385d2d",
    "changed_pixels": 2,
    "level_changed": false,
    "full_reset": false
@@ -513,15 +513,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 49,
-    "y": 16
+    "x": 59,
+    "y": 50
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 28,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "08284454a982e0f3",
+   "frame_hash": "b4ea97cb9e0a93b8",
    "changed_pixels": 1,
    "level_changed": false,
    "full_reset": false
@@ -531,15 +531,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 54,
-    "y": 7
+    "x": 57,
+    "y": 2
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 29,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "71f127208198d967",
+   "frame_hash": "7e2fc87aa81d64a0",
    "changed_pixels": 1,
    "level_changed": false,
    "full_reset": false
@@ -549,15 +549,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 46,
-    "y": 25
+    "x": 21,
+    "y": 47
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 30,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "f09f43d52bf4552a",
+   "frame_hash": "2d50e822c280b9ff",
    "changed_pixels": 1,
    "level_changed": false,
    "full_reset": false
@@ -567,15 +567,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 62,
-    "y": 45
+    "x": 3,
+    "y": 38
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 31,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "58ec504311dbff83",
+   "frame_hash": "ff5bc4d6896a4f47",
    "changed_pixels": 2,
    "level_changed": false,
    "full_reset": false
@@ -585,15 +585,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 44,
-    "y": 0
+    "x": 15,
+    "y": 23
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 32,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "cd7ff2638b457f89",
+   "frame_hash": "409d827e38645e36",
    "changed_pixels": 1,
    "level_changed": false,
    "full_reset": false
@@ -603,15 +603,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 58,
-    "y": 3
+    "x": 42,
+    "y": 25
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 33,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "2dc94b279773566e",
+   "frame_hash": "6d35e9ef2728fb00",
    "changed_pixels": 1,
    "level_changed": false,
    "full_reset": false
@@ -621,15 +621,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 22,
-    "y": 23
+    "x": 56,
+    "y": 32
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 34,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "5ea10f7fbcb581a9",
+   "frame_hash": "38d412a8080a5037",
    "changed_pixels": 2,
    "level_changed": false,
    "full_reset": false
@@ -639,15 +639,15 @@
    "level": 0,
    "action": "ACTION6",
    "data": {
-    "x": 32,
-    "y": 4
+    "x": 40,
+    "y": 40
    },
    "state": "NOT_FINISHED",
    "levels_completed": 0,
    "actions_this_level": 35,
    "budget_this_level": 35,
    "n_frames": 1,
-   "frame_hash": "cd31bc3bf36ed099",
+   "frame_hash": "a1c9835b9c64f96c",
    "changed_pixels": 1,
    "level_changed": false,
    "full_reset": false

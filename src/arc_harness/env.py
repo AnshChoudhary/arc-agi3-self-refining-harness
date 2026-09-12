@@ -93,7 +93,9 @@ _arcade_cache: dict[bool, Arcade] = {}
 
 def _quiet_logger() -> logging.Logger:
     # The toolkit also logs via module loggers (arc_agi.scorecard etc.); keep those quiet too.
-    logging.getLogger("arc_agi").setLevel(logging.ERROR)
+    # arc_agi.scorecard sets its own INFO level + stdout handler at import, so name it explicitly.
+    for name in ("arc_agi", "arc_agi.scorecard"):
+        logging.getLogger(name).setLevel(logging.ERROR)
     log = logging.getLogger("arc_harness.toolkit")
     log.setLevel(logging.ERROR)
     log.propagate = False
@@ -125,6 +127,19 @@ def get_arcade(offline: bool) -> Arcade:
 def list_game_ids() -> list[str]:
     """Versioned ids (e.g. 'ls20-9607627b') of every public game, from the API."""
     return sorted(e.game_id for e in get_arcade(offline=False).get_environments())
+
+
+def baselines_for(game_id: str, offline: bool | None = None) -> list[int]:
+    """Human baseline per level without instantiating the game (for cost projection)."""
+    if offline is None:
+        offline = _is_downloaded(game_id)
+    base = game_id.split("-", 1)[0]
+    for info in get_arcade(offline).get_environments():
+        if info.game_id == game_id or (info.game_id.split("-", 1)[0] == base and "-" not in game_id):
+            if not info.baseline_actions:
+                raise RuntimeError(f"{info.game_id} has no human baseline; RHAE is undefined")
+            return list(info.baseline_actions)
+    raise KeyError(f"{game_id!r} not known to the toolkit (offline={offline})")
 
 
 def _hash(frame: np.ndarray) -> str:
