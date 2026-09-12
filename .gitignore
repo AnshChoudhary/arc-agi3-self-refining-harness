@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+# Downloaded game sources from the ARC API (re-fetched on demand; versions pinned in config/split.json)
+environment_files/
+# Toolkit's own scorecard recordings; our trajectories/ are the source of truth
+.toolkit_recordings/
+recordings/
+.llm_cache/
+.env
+*.egg-info/

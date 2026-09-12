@@ -1,0 +1,27 @@
+[project]
+name = "arc-harness"
+version = "0.0.1"
+description = "Self-refining LLM harness experiment on ARC-AGI-3 (see SPEC.md)"
+requires-python = ">=3.11"
+dependencies = [
+    "arc-agi>=0.9.9",
+    "numpy",
+    "anthropic",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["arc_harness", "config"]
+
+[tool.setuptools.package-dir]
+arc_harness = "src/arc_harness"
+config = "config"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
