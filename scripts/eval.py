@@ -19,7 +19,7 @@ from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from importlib.metadata import version
 
-from arc_harness.agents import Agent, RandomAgent
+from arc_harness.agents import Agent, RandomAgent, ScriptedHandleAgent
 from arc_harness.env import PROJECT_ROOT, ArcEnv, baselines_for
 from arc_harness.llm import Usage
 from arc_harness.repl import harness_fingerprint
@@ -47,6 +47,8 @@ class GameRow:
 def make_agent(name: str, model: ModelSpec | None, harness: str, agent_seed: int) -> Agent:
     if name == "random":
         return RandomAgent(agent_seed)
+    if name == "scripted":
+        return ScriptedHandleAgent()
     if name == "student":
         # M1 deliverable; keep the CLI surface stable now.
         raise SystemExit("student agent is not implemented yet (M1)")
@@ -82,7 +84,7 @@ def project_cost(agent: Agent, games: list[str], model: ModelSpec | None, max_le
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--set", choices=["refine", "heldout", "all"], required=True)
-    ap.add_argument("--agent", choices=["random", "student"], default="random")
+    ap.add_argument("--agent", choices=["random", "scripted", "student"], default="random")
     ap.add_argument("--model", choices=sorted(MODELS), default=DEFAULT_MODEL,
                     help=f"LLM alias; default is the cheapest ({DEFAULT_MODEL})")
     ap.add_argument("--harness", default="current", help="harness snapshot id (M2); 'current' = harness/ as is")
@@ -123,7 +125,11 @@ def main() -> None:
         scores.append(gs)
         path = save(build(env, agent.name, agent_steps, gs.score, model.name if model else None,
                           f"{args.harness}@{harness_fingerprint()}", started))
-        outcome = res.outcome or "stopped_max_levels"  # env.done is False only when the caller stopped it
+        if res.outcome is None:  # env.done is False: either we stopped it or the agent gave up
+            hit_cap = args.max_levels is not None and res.levels_completed >= args.max_levels
+            outcome = "stopped_max_levels" if hit_cap else "agent_gave_up"
+        else:
+            outcome = res.outcome
         rows.append(GameRow(res.game_id, gs.score, res.levels_completed, outcome, res.level_actions,
                             res.baselines, str(path.relative_to(PROJECT_ROOT)), used.input_tokens, used.output_tokens))
         print(f"  {res.game_id:<14} score={gs.score:.3f} levels={res.levels_completed}/{len(res.baselines)} "

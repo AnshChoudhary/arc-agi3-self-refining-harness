@@ -1,0 +1,58 @@
+{
+ "run_id": "20260912T182431Z_heldout_scripted",
+ "started_at": "2026-09-12T18:24:31.849736+00:00",
+ "wall_seconds": 0.8,
+ "set": "heldout",
+ "agent": "scripted",
+ "model": null,
+ "harness_snapshot": "current@da39a3ee5e6b",
+ "split_file_sha1": "8a7011090297",
+ "split_seed": 0,
+ "env_seed": 0,
+ "agent_seed": 0,
+ "budget_multiplier": 5,
+ "max_levels": null,
+ "toolkit": {
+  "arc-agi": "0.9.9",
+  "arcengine": "0.9.3"
+ },
+ "argv": [
+  "--set",
+  "heldout",
+  "--games",
+  "r11l",
+  "--agent",
+  "scripted",
+  "--offline"
+ ],
+ "rhae": 0.2857142857142857,
+ "cost": {
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "usd": 0.0
+ },
+ "games": [
+  {
+   "game_id": "r11l-495a7899",
+   "score": 0.2857142857142857,
+   "levels_completed": 3,
+   "outcome": "agent_gave_up",
+   "level_actions": [
+    3,
+    10,
+    12
+   ],
+   "baselines": [
+    22,
+    33,
+    51,
+    26,
+    52,
+    49
+   ],
+   "trajectory": "trajectories/heldout/r11l-495a7899_scripted_20260912T182431Z.json",
+   "input_tokens": 0,
+   "output_tokens": 0
+  }
+ ]
+}

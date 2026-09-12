@@ -59,3 +59,14 @@ our implementation equals the toolkit's on several cases.
 ## Reproducibility
 `Arcade.make(game_id, seed=...)` passes `seed` to games whose constructor accepts it.
 Versioned ids (`ls20-9607627b`) are pinned in `config/split.json`.
+
+## M0 sanity solver (scripts/eval.py --agent scripted)
+`ScriptedHandleAgent` in `src/arc_harness/agents.py` solves the handle/centroid game used
+for plumbing validation: each object sits at the floor-centroid of its handle diamonds,
+clicking empty space moves the selected handle, clicking a diamond selects it, and a level
+is won when every object overlaps the hollow X of its colour. Moves that park an object on
+a hazard region are reverted by the engine and count toward a game-over, so the planner
+simulates the object's position after every single handle move.
+It clears levels 1–3 under the human baseline (1.15 cap each). Level 4 adds two-colour
+objects and collectable colour pieces; the agent detects no plan and gives up there
+(`outcome=agent_gave_up`). Game-over inside a level costs one RESET action.

@@ -232,6 +232,8 @@ class ArcEnv:
         if act is GameAction.RESET:
             return self.reset()
         self._check_can_act()
+        if self.state == "GAME_OVER":
+            raise InvalidAction("game over: only RESET is accepted (it restarts this level, 1 action)")
         if act.name not in self.available_actions:
             raise InvalidAction(f"{act.name} not available; choose from {self.available_actions}")
         data: dict = {}

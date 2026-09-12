@@ -1,0 +1,667 @@
+{
+ "trajectory_id": "r11l-495a7899_scripted_20260912T182431Z",
+ "game_id": "r11l-495a7899",
+ "split": "heldout",
+ "agent": "scripted",
+ "seed": 0,
+ "model": null,
+ "harness_snapshot": "current@da39a3ee5e6b",
+ "budget_multiplier": 5,
+ "toolkit": {
+  "arc-agi": "0.9.9",
+  "arcengine": "0.9.3"
+ },
+ "started_at": "2026-09-12T18:24:31.849736+00:00",
+ "baselines": [
+  22,
+  33,
+  51,
+  26,
+  52,
+  49
+ ],
+ "env_steps": [
+  {
+   "index": 1,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 29,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 1,
+   "budget_this_level": 110,
+   "n_frames": 3,
+   "frame_hash": "64407d743513dc08",
+   "changed_pixels": 125,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 2,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 27,
+    "y": 59
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 2,
+   "budget_this_level": 110,
+   "n_frames": 1,
+   "frame_hash": "32f2fe0b737d2885",
+   "changed_pixels": 25,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 3,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 49,
+    "y": 33
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 1,
+   "actions_this_level": 3,
+   "budget_this_level": 110,
+   "n_frames": 23,
+   "frame_hash": "2f9b90f8769e3248",
+   "changed_pixels": 1409,
+   "level_changed": true,
+   "full_reset": false
+  },
+  {
+   "index": 4,
+   "level": 1,
+   "action": "ACTION6",
+   "data": {
+    "x": 54,
+    "y": 48
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 1,
+   "actions_this_level": 1,
+   "budget_this_level": 165,
+   "n_frames": 1,
+   "frame_hash": "d0f6514f79308b02",
+   "changed_pixels": 25,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 5,
+   "level": 1,
+   "action": "ACTION6",
+   "data": {
+    "x": 58,
+    "y": 21
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 1,
+   "actions_this_level": 2,
+   "budget_this_level": 165,
+   "n_frames": 3,
+   "frame_hash": "11bf2399f9e73479",
+   "changed_pixels": 81,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 6,
+   "level": 1,
+   "action": "ACTION6",
+   "data": {
+    "x": 45,
+    "y": 35
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 1,
+   "actions_this_level": 3,
+   "budget_this_level": 165,
+   "n_frames": 1,
+   "frame_hash": "49762d3b8d483084",
+   "changed_pixels": 25,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 7,
+   "level": 1,
+   "action": "ACTION6",
+   "data": {
+    "x": 57,
+    "y": 16
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 1,
+   "actions_this_level": 4,
+   "budget_this_level": 165,
+   "n_frames": 22,
+   "frame_hash": "53040561ecc8c68c",
+   "changed_pixels": 78,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 8,
+   "level": 1,
+   "action": "ACTION6",
+   "data": {
+    "x": 17,
+    "y": 6
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 1,
+   "actions_this_level": 5,
+   "budget_this_level": 165,
+   "n_frames": 1,
+   "frame_hash": "3472b6ae3863c5c6",
+   "changed_pixels": 15,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 9,
+   "level": 1,
+   "action": "ACTION6",
+   "data": {
+    "x": 49,
+    "y": 57
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 1,
+   "actions_this_level": 6,
+   "budget_this_level": 165,
+   "n_frames": 3,
+   "frame_hash": "ef4378d8fd06fa10",
+   "changed_pixels": 168,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 10,
+   "level": 1,
+   "action": "ACTION6",
+   "data": {
+    "x": 8,
+    "y": 21
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 1,
+   "actions_this_level": 7,
+   "budget_this_level": 165,
+   "n_frames": 1,
+   "frame_hash": "c3bc43603a0398cc",
+   "changed_pixels": 25,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 11,
+   "level": 1,
+   "action": "ACTION6",
+   "data": {
+    "x": 24,
+    "y": 60
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 1,
+   "actions_this_level": 8,
+   "budget_this_level": 165,
+   "n_frames": 3,
+   "frame_hash": "b478725dc7942c2d",
+   "changed_pixels": 178,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 12,
+   "level": 1,
+   "action": "ACTION6",
+   "data": {
+    "x": 49,
+    "y": 9
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 1,
+   "actions_this_level": 9,
+   "budget_this_level": 165,
+   "n_frames": 1,
+   "frame_hash": "84b023b11ac5e621",
+   "changed_pixels": 25,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 13,
+   "level": 1,
+   "action": "ACTION6",
+   "data": {
+    "x": 49,
+    "y": 36
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 2,
+   "actions_this_level": 10,
+   "budget_this_level": 165,
+   "n_frames": 23,
+   "frame_hash": "0c2db7c1f0a5d54b",
+   "changed_pixels": 1483,
+   "level_changed": true,
+   "full_reset": false
+  },
+  {
+   "index": 14,
+   "level": 2,
+   "action": "ACTION6",
+   "data": {
+    "x": 37,
+    "y": 34
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 2,
+   "actions_this_level": 1,
+   "budget_this_level": 255,
+   "n_frames": 1,
+   "frame_hash": "79db316abad7df75",
+   "changed_pixels": 25,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 15,
+   "level": 2,
+   "action": "ACTION6",
+   "data": {
+    "x": 46,
+    "y": 58
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 2,
+   "actions_this_level": 2,
+   "budget_this_level": 255,
+   "n_frames": 3,
+   "frame_hash": "d28cd39ebaffde96",
+   "changed_pixels": 86,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 16,
+   "level": 2,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 40
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 2,
+   "actions_this_level": 3,
+   "budget_this_level": 255,
+   "n_frames": 1,
+   "frame_hash": "a070213b01c59a8c",
+   "changed_pixels": 25,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 17,
+   "level": 2,
+   "action": "ACTION6",
+   "data": {
+    "x": 23,
+    "y": 56
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 2,
+   "actions_this_level": 4,
+   "budget_this_level": 255,
+   "n_frames": 22,
+   "frame_hash": "e7b3d53b357340a7",
+   "changed_pixels": 104,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 18,
+   "level": 2,
+   "action": "ACTION6",
+   "data": {
+    "x": 14,
+    "y": 16
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 2,
+   "actions_this_level": 5,
+   "budget_this_level": 255,
+   "n_frames": 1,
+   "frame_hash": "132116720efd8bb2",
+   "changed_pixels": 25,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 19,
+   "level": 2,
+   "action": "ACTION6",
+   "data": {
+    "x": 54,
+    "y": 45
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 2,
+   "actions_this_level": 6,
+   "budget_this_level": 255,
+   "n_frames": 3,
+   "frame_hash": "56705bd5e01a93cf",
+   "changed_pixels": 126,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 20,
+   "level": 2,
+   "action": "ACTION6",
+   "data": {
+    "x": 34,
+    "y": 9
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 2,
+   "actions_this_level": 7,
+   "budget_this_level": 255,
+   "n_frames": 1,
+   "frame_hash": "4cb8c2fe81e2d682",
+   "changed_pixels": 25,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 21,
+   "level": 2,
+   "action": "ACTION6",
+   "data": {
+    "x": 60,
+    "y": 49
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 2,
+   "actions_this_level": 8,
+   "budget_this_level": 255,
+   "n_frames": 3,
+   "frame_hash": "c140c2196d1e843c",
+   "changed_pixels": 137,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 22,
+   "level": 2,
+   "action": "ACTION6",
+   "data": {
+    "x": 23,
+    "y": 21
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 2,
+   "actions_this_level": 9,
+   "budget_this_level": 255,
+   "n_frames": 1,
+   "frame_hash": "f1460ee981e6f59e",
+   "changed_pixels": 25,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 23,
+   "level": 2,
+   "action": "ACTION6",
+   "data": {
+    "x": 51,
+    "y": 59
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 2,
+   "actions_this_level": 10,
+   "budget_this_level": 255,
+   "n_frames": 3,
+   "frame_hash": "36bd64278d0ae3f5",
+   "changed_pixels": 131,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 24,
+   "level": 2,
+   "action": "ACTION6",
+   "data": {
+    "x": 39,
+    "y": 16
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 2,
+   "actions_this_level": 11,
+   "budget_this_level": 255,
+   "n_frames": 1,
+   "frame_hash": "96d5845378e3e5d3",
+   "changed_pixels": 25,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 25,
+   "level": 2,
+   "action": "ACTION6",
+   "data": {
+    "x": 57,
+    "y": 61
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 3,
+   "actions_this_level": 12,
+   "budget_this_level": 255,
+   "n_frames": 23,
+   "frame_hash": "89ef8d6dc23f2f7e",
+   "changed_pixels": 1966,
+   "level_changed": true,
+   "full_reset": false
+  }
+ ],
+ "agent_steps": [
+  {
+   "hypothesis": "move handle (7,36) -> (29,10); object 15 to (39, 21)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "select handle of colour 15 at (27,59)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "move handle (27,59) -> (49,33); object 15 to (39, 21)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "select handle of colour 15 at (54,48)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "move handle (54,48) -> (58,21); object 15 to (57, 18)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "select handle of colour 15 at (45,35)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "move handle (45,35) -> (57,16); object 15 to (57, 18)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "select handle of colour 12 at (17,6)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "move handle (17,6) -> (49,57); object 12 to (40, 51)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "select handle of colour 12 at (8,21)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "move handle (8,21) -> (24,60); object 12 to (40, 51)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "select handle of colour 12 at (49,9)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "move handle (49,9) -> (49,36); object 12 to (40, 51)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "select handle of colour 15 at (37,34)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "move handle (37,34) -> (46,58); object 15 to (34, 57)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "select handle of colour 15 at (52,40)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "move handle (52,40) -> (23,56); object 15 to (34, 57)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "select handle of colour 14 at (14,16)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "move handle (14,16) -> (54,45); object 14 to (55, 53)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "select handle of colour 14 at (34,9)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "move handle (34,9) -> (60,49); object 14 to (55, 53)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "select handle of colour 14 at (23,21)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "move handle (23,21) -> (51,59); object 14 to (55, 53)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "select handle of colour 14 at (39,16)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "move handle (39,16) -> (57,61); object 14 to (55, 53)",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  },
+  {
+   "hypothesis": "no valid plan; giving up",
+   "analysis_code": [],
+   "invalid_attempts": [],
+   "input_tokens": 0,
+   "output_tokens": 0
+  }
+ ],
+ "outcome": null,
+ "levels_completed": 3,
+ "level_actions": [
+  3,
+  10,
+  12
+ ],
+ "score": 0.2857142857142857
+}
