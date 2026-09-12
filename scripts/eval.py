@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import signal
 import sys
 import time
 from dataclasses import asdict, dataclass
@@ -21,12 +22,13 @@ from importlib.metadata import version
 
 from arc_harness.agents import Agent, RandomAgent, ScriptedHandleAgent
 from arc_harness.env import PROJECT_ROOT, ArcEnv, baselines_for
-from arc_harness.llm import Usage
+from arc_harness.llm import CostCapExceeded, LLMClient, Usage
 from arc_harness.repl import harness_fingerprint
 from arc_harness.scoring import GameScore, game_score, rhae
+from arc_harness.student import StudentAgent
 from arc_harness.trajectory import SPLIT_FILE, build, load_split, save
 from config.budget import BUDGET_MULTIPLIER, level_budget
-from config.models import COST_CAP_USD, DEFAULT_MODEL, MODELS, ModelSpec, get_model
+from config.models import COST_CAP_USD, DEFAULT_EFFORT, DEFAULT_MODEL, EFFORTS, MODELS, ModelSpec, get_model
 
 RESULTS_DIR = PROJECT_ROOT / "results"
 
@@ -44,14 +46,14 @@ class GameRow:
     output_tokens: int
 
 
-def make_agent(name: str, model: ModelSpec | None, harness: str, agent_seed: int) -> Agent:
+def make_agent(name: str, model: ModelSpec | None, effort: str, agent_seed: int, use_cache: bool) -> Agent:
     if name == "random":
         return RandomAgent(agent_seed)
     if name == "scripted":
         return ScriptedHandleAgent()
     if name == "student":
-        # M1 deliverable; keep the CLI surface stable now.
-        raise SystemExit("student agent is not implemented yet (M1)")
+        assert model is not None
+        return StudentAgent(LLMClient(model, effort=effort, use_cache=use_cache, budget_usd=COST_CAP_USD))
     raise SystemExit(f"unknown agent {name!r}")
 
 
@@ -87,6 +89,9 @@ def main() -> None:
     ap.add_argument("--agent", choices=["random", "scripted", "student"], default="random")
     ap.add_argument("--model", choices=sorted(MODELS), default=DEFAULT_MODEL,
                     help=f"LLM alias; default is the cheapest ({DEFAULT_MODEL})")
+    ap.add_argument("--effort", choices=EFFORTS, default=DEFAULT_EFFORT,
+                    help=f"reasoning effort for the student's model; default is the cheapest ({DEFAULT_EFFORT})")
+    ap.add_argument("--no-llm-cache", action="store_true", help="always call the API (default: reuse cached replies)")
     ap.add_argument("--harness", default="current", help="harness snapshot id (M2); 'current' = harness/ as is")
     ap.add_argument("--games", help="comma-separated subset (must belong to --set)")
     ap.add_argument("--seed", type=int, default=0, help="environment seed")
@@ -98,18 +103,21 @@ def main() -> None:
 
     offline = True if args.offline else None
     model = get_model(args.model) if args.agent == "student" else None
-    agent = make_agent(args.agent, model, args.harness, args.agent_seed)
+    agent = make_agent(args.agent, model, args.effort, args.agent_seed, not args.no_llm_cache)
     games = select_games(args.set, args.games.split(",") if args.games else None)
 
     total_budget, est, est_usd = project_cost(agent, games, model, args.max_levels, BUDGET_MULTIPLIER, offline)
     print(f"{len(games)} games ({args.set}), agent={agent.name}, model={model.name if model else '-'}, "
-          f"harness={args.harness}@{harness_fingerprint()}")
+          f"effort={args.effort if model else '-'}, harness={args.harness}@{harness_fingerprint()}")
     print(f"projected: <= {total_budget} env actions, ~{est.input_tokens + est.output_tokens} tokens, "
           f"${est_usd:.2f} (cap ${COST_CAP_USD:.2f})")
     if est_usd > COST_CAP_USD:
         raise SystemExit(f"projected cost ${est_usd:.2f} exceeds COST_CAP_USD; raise it in config/models.py")
     if args.dry_run:
         return
+
+    # A plain `kill` (SIGTERM) should still save what we have, like Ctrl-C does.
+    signal.signal(signal.SIGTERM, lambda *_: (_ for _ in ()).throw(KeyboardInterrupt()))
 
     started = datetime.now(timezone.utc)
     t0 = time.perf_counter()
@@ -118,14 +126,25 @@ def main() -> None:
     usage = Usage()
     for g in games:
         env = ArcEnv(g, seed=args.seed, offline=offline)
-        agent_steps, used = agent.play(env, args.max_levels)
+        print(f"  {env.game_id}: baselines={env.baselines} actions={env.available_actions}", flush=True)
+        aborted = None
+        try:
+            agent_steps, used = agent.play(env, args.max_levels)
+        except (CostCapExceeded, KeyboardInterrupt) as e:  # keep what we have; the row says it was cut short
+            aborted = type(e).__name__
+            agent_steps, used = [], Usage()
+            print(f"  aborted: {aborted}: {e}", flush=True)
+        if isinstance(agent, StudentAgent):
+            used = agent.llm.usage  # authoritative, includes calls made before an abort
         usage.add(used)
         res = env.result()
         gs = game_score(res.game_id, res.baselines, res.level_actions, res.levels_completed)
         scores.append(gs)
         path = save(build(env, agent.name, agent_steps, gs.score, model.name if model else None,
                           f"{args.harness}@{harness_fingerprint()}", started))
-        if res.outcome is None:  # env.done is False: either we stopped it or the agent gave up
+        if aborted:
+            outcome = f"aborted_{aborted}"
+        elif res.outcome is None:  # env.done is False: either we stopped it or the agent gave up
             hit_cap = args.max_levels is not None and res.levels_completed >= args.max_levels
             outcome = "stopped_max_levels" if hit_cap else "agent_gave_up"
         else:
@@ -133,7 +152,9 @@ def main() -> None:
         rows.append(GameRow(res.game_id, gs.score, res.levels_completed, outcome, res.level_actions,
                             res.baselines, str(path.relative_to(PROJECT_ROOT)), used.input_tokens, used.output_tokens))
         print(f"  {res.game_id:<14} score={gs.score:.3f} levels={res.levels_completed}/{len(res.baselines)} "
-              f"actions={res.level_actions} outcome={outcome}", flush=True)
+              f"actions={res.level_actions} outcome={outcome} cost=${used.cost_usd(model):.4f}", flush=True)
+        if aborted:
+            break
 
     total = rhae(scores)
     run_id = f"{started.strftime('%Y%m%dT%H%M%SZ')}_{args.set}_{agent.name}"
@@ -144,6 +165,7 @@ def main() -> None:
         "set": args.set,
         "agent": agent.name,
         "model": model.name if model else None,
+        "effort": args.effort if model else None,
         "harness_snapshot": f"{args.harness}@{harness_fingerprint()}",
         "split_file_sha1": hashlib.sha1(SPLIT_FILE.read_bytes()).hexdigest()[:12],
         "split_seed": load_split()["seed"],
@@ -154,8 +176,7 @@ def main() -> None:
         "toolkit": {"arc-agi": version("arc-agi"), "arcengine": version("arcengine")},
         "argv": sys.argv[1:],
         "rhae": total,
-        "cost": {"input_tokens": usage.input_tokens, "output_tokens": usage.output_tokens,
-                 "usd": round(usage.cost_usd(model), 4)},
+        "cost": {**usage.__dict__, "usd": round(usage.cost_usd(model), 4)},
         "games": [asdict(r) for r in rows],
     }
     RESULTS_DIR.mkdir(exist_ok=True)

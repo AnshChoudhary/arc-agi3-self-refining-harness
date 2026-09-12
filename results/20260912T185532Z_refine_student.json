@@ -1,0 +1,64 @@
+{
+ "run_id": "20260912T185532Z_refine_student",
+ "started_at": "2026-09-12T18:55:32.599008+00:00",
+ "wall_seconds": 18.4,
+ "set": "refine",
+ "agent": "student",
+ "model": "deepseek-v4-flash",
+ "effort": "none",
+ "harness_snapshot": "current@bc653ad4e040",
+ "split_file_sha1": "8a7011090297",
+ "split_seed": 0,
+ "env_seed": 0,
+ "agent_seed": 0,
+ "budget_multiplier": 5,
+ "max_levels": 1,
+ "toolkit": {
+  "arc-agi": "0.9.9",
+  "arcengine": "0.9.3"
+ },
+ "argv": [
+  "--set",
+  "refine",
+  "--games",
+  "ls20",
+  "--agent",
+  "student",
+  "--max-levels",
+  "1",
+  "--offline"
+ ],
+ "rhae": 0.0,
+ "cost": {
+  "input_tokens": 51937,
+  "output_tokens": 2576,
+  "cached_input_tokens": 39168,
+  "reasoning_tokens": 0,
+  "calls": 4,
+  "cache_hits": 25,
+  "usd": 0.0036
+ },
+ "games": [
+  {
+   "game_id": "ls20-9607627b",
+   "score": 0.0,
+   "levels_completed": 0,
+   "outcome": "agent_gave_up",
+   "level_actions": [
+    11
+   ],
+   "baselines": [
+    22,
+    123,
+    73,
+    84,
+    96,
+    192,
+    186
+   ],
+   "trajectory": "trajectories/refine/ls20-9607627b_student_20260912T185532Z.json",
+   "input_tokens": 51937,
+   "output_tokens": 2576
+  }
+ ]
+}

@@ -7,6 +7,8 @@ dependencies = [
     "arc-agi>=0.9.9",
     "numpy",
     "anthropic",
+    "openai",
+    "python-dotenv",
 ]
 
 [project.optional-dependencies]

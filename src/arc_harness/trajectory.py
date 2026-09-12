@@ -25,7 +25,11 @@ class AgentStep:
 
     hypothesis: str | None = None
     analysis_code: list[str] = field(default_factory=list)
+    repl_outputs: list[str] = field(default_factory=list)
     invalid_attempts: list[str] = field(default_factory=list)
+    notes: str | None = None  # the student's durable scratchpad after this step
+    reply: str | None = None  # final raw LLM reply that produced the action
+    llm_calls: int = 0
     input_tokens: int = 0
     output_tokens: int = 0
 
