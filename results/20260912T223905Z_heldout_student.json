@@ -1,0 +1,269 @@
+{
+ "run_id": "20260912T223905Z_heldout_student",
+ "started_at": "2026-09-12T22:39:05.070639+00:00",
+ "wall_seconds": 5581.7,
+ "set": "heldout",
+ "agent": "student",
+ "model": "deepseek-v4-flash",
+ "effort": "high",
+ "harness_snapshot": "current@bc653ad4e040",
+ "code_version": "751c197",
+ "split_file_sha1": "8a7011090297",
+ "split_seed": 0,
+ "env_seed": 0,
+ "agent_seed": 0,
+ "budget_multiplier": 5,
+ "max_levels": 1,
+ "max_actions_per_level": 60,
+ "jobs": 5,
+ "toolkit": {
+  "arc-agi": "0.9.9",
+  "arcengine": "0.9.3"
+ },
+ "argv": [
+  "--set",
+  "heldout",
+  "--agent",
+  "student",
+  "--effort",
+  "high",
+  "--max-levels",
+  "1",
+  "--max-actions-per-level",
+  "60",
+  "--offline",
+  "--jobs",
+  "5"
+ ],
+ "rhae": 0.017643198759543347,
+ "cost": {
+  "input_tokens": 21878893,
+  "output_tokens": 4418513,
+  "cached_input_tokens": 17499904,
+  "reasoning_tokens": 0,
+  "calls": 2285,
+  "cache_hits": 0,
+  "usd": 2.3402
+ },
+ "games": [
+  {
+   "game_id": "bp35-0a0ad940",
+   "score": 0.0,
+   "levels_completed": 0,
+   "outcome": "budget_exhausted",
+   "level_actions": [
+    60
+   ],
+   "baselines": [
+    21,
+    48,
+    44,
+    38,
+    33,
+    87,
+    86,
+    131,
+    163
+   ],
+   "trajectory": "trajectories/heldout/bp35-0a0ad940_student_20260912T223905Z.json",
+   "input_tokens": 4310299,
+   "output_tokens": 722843
+  },
+  {
+   "game_id": "lf52-271a04aa",
+   "score": 0.0,
+   "levels_completed": 0,
+   "outcome": "budget_exhausted",
+   "level_actions": [
+    60
+   ],
+   "baselines": [
+    32,
+    81,
+    60,
+    71,
+    205,
+    148,
+    244,
+    109,
+    164,
+    225
+   ],
+   "trajectory": "trajectories/heldout/lf52-271a04aa_student_20260912T223905Z.json",
+   "input_tokens": 4369157,
+   "output_tokens": 791398
+  },
+  {
+   "game_id": "lp85-305b61c3",
+   "score": 0.027777777777777776,
+   "levels_completed": 1,
+   "outcome": "stopped_max_levels",
+   "level_actions": [
+    10
+   ],
+   "baselines": [
+    17,
+    38,
+    31,
+    16,
+    41,
+    60,
+    26,
+    159
+   ],
+   "trajectory": "trajectories/heldout/lp85-305b61c3_student_20260912T223905Z.json",
+   "input_tokens": 583550,
+   "output_tokens": 106757
+  },
+  {
+   "game_id": "m0r0-492f87ba",
+   "score": 0.0,
+   "levels_completed": 0,
+   "outcome": "budget_exhausted",
+   "level_actions": [
+    60
+   ],
+   "baselines": [
+    30,
+    111,
+    203,
+    26,
+    500,
+    237
+   ],
+   "trajectory": "trajectories/heldout/m0r0-492f87ba_student_20260912T223905Z.json",
+   "input_tokens": 3657019,
+   "output_tokens": 1021944
+  },
+  {
+   "game_id": "r11l-495a7899",
+   "score": 0.047619047619047616,
+   "levels_completed": 1,
+   "outcome": "stopped_max_levels",
+   "level_actions": [
+    3
+   ],
+   "baselines": [
+    22,
+    33,
+    51,
+    26,
+    52,
+    49
+   ],
+   "trajectory": "trajectories/heldout/r11l-495a7899_student_20260912T223905Z.json",
+   "input_tokens": 81147,
+   "output_tokens": 32070
+  },
+  {
+   "game_id": "re86-8af5384d",
+   "score": 0.022327916501519357,
+   "levels_completed": 1,
+   "outcome": "stopped_max_levels",
+   "level_actions": [
+    29
+   ],
+   "baselines": [
+    26,
+    42,
+    86,
+    108,
+    189,
+    139,
+    424,
+    241
+   ],
+   "trajectory": "trajectories/heldout/re86-8af5384d_student_20260912T223905Z.json",
+   "input_tokens": 1243781,
+   "output_tokens": 379582
+  },
+  {
+   "game_id": "sb26-7fbdac44",
+   "score": 0.027777777777777776,
+   "levels_completed": 1,
+   "outcome": "stopped_max_levels",
+   "level_actions": [
+    16
+   ],
+   "baselines": [
+    18,
+    28,
+    18,
+    19,
+    31,
+    23,
+    58,
+    18
+   ],
+   "trajectory": "trajectories/heldout/sb26-7fbdac44_student_20260912T223905Z.json",
+   "input_tokens": 415687,
+   "output_tokens": 46582
+  },
+  {
+   "game_id": "sc25-635fd71a",
+   "score": 0.047619047619047616,
+   "levels_completed": 1,
+   "outcome": "stopped_max_levels",
+   "level_actions": [
+    27
+   ],
+   "baselines": [
+    36,
+    6,
+    32,
+    83,
+    143,
+    50
+   ],
+   "trajectory": "trajectories/heldout/sc25-635fd71a_student_20260912T223905Z.json",
+   "input_tokens": 2026099,
+   "output_tokens": 398623
+  },
+  {
+   "game_id": "su15-1944f8ab",
+   "score": 0.0033104203002633286,
+   "levels_completed": 1,
+   "outcome": "stopped_max_levels",
+   "level_actions": [
+    57
+   ],
+   "baselines": [
+    22,
+    42,
+    26,
+    115,
+    36,
+    31,
+    8,
+    40,
+    41
+   ],
+   "trajectory": "trajectories/heldout/su15-1944f8ab_student_20260912T223905Z.json",
+   "input_tokens": 2110706,
+   "output_tokens": 255418
+  },
+  {
+   "game_id": "wa30-ee6fef47",
+   "score": 0.0,
+   "levels_completed": 0,
+   "outcome": "aborted_APIStatusError",
+   "level_actions": [
+    51
+   ],
+   "baselines": [
+    71,
+    119,
+    183,
+    98,
+    368,
+    68,
+    79,
+    442,
+    415
+   ],
+   "trajectory": "trajectories/heldout/wa30-ee6fef47_student_20260912T223905Z.json",
+   "input_tokens": 3081448,
+   "output_tokens": 663296
+  }
+ ]
+}
