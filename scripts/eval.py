@@ -137,7 +137,8 @@ def select_games(which: str, only: list[str] | None) -> list[str]:
 
 
 def project_cost(agent: Agent, games: list[str], model: ModelSpec | None, max_levels: int | None,
-                 multiplier: int, offline: bool | None, cap: int | None = None) -> tuple[int, Usage, float]:
+                 multiplier: int, offline: bool | None, cap: int | None = None,
+                 repeats: int = 1) -> tuple[int, Usage, float]:
     total_budget = 0
     for g in games:
         bl = baselines_for(g, offline)
@@ -145,6 +146,7 @@ def project_cost(agent: Agent, games: list[str], model: ModelSpec | None, max_le
         for b in levels:
             lb = level_budget(b, multiplier)
             total_budget += min(lb, cap) if cap else lb
+    total_budget *= repeats  # every repeat plays the whole game again
     usage = agent.estimate_usage(total_budget)
     return total_budget, usage, usage.cost_usd(model)
 
@@ -178,7 +180,7 @@ def main() -> None:
     games = select_games(args.set, args.games.split(",") if args.games else None)
 
     total_budget, est, est_usd = project_cost(agent, games, model, args.max_levels, BUDGET_MULTIPLIER, offline,
-                                              args.max_actions_per_level)
+                                              args.max_actions_per_level, args.repeats)
     print(f"{len(games)} games ({args.set}), agent={agent.name}, model={model.name if model else '-'}, "
           f"effort={args.effort if model else '-'}, harness={args.harness}@{harness_fingerprint()}")
     print(f"projected: <= {total_budget} env actions, ~{est.input_tokens + est.output_tokens} tokens, "
