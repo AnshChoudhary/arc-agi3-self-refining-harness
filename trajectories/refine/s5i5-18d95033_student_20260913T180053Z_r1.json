@@ -1,0 +1,72 @@
+{
+ "trajectory_id": "s5i5-18d95033_student_20260913T180053Z_r1",
+ "game_id": "s5i5-18d95033",
+ "split": "refine",
+ "agent": "student",
+ "seed": 0,
+ "model": "deepseek-v4-flash",
+ "harness_snapshot": "current@bc653ad4e040",
+ "code_version": "5e83e3c",
+ "budget_multiplier": 5,
+ "max_actions_per_level": 60,
+ "toolkit": {
+  "arc-agi": "0.9.9",
+  "arcengine": "0.9.3"
+ },
+ "started_at": "2026-09-13T18:00:53.006135+00:00",
+ "baselines": [
+  20,
+  89,
+  106,
+  54,
+  162,
+  38,
+  86,
+  83
+ ],
+ "env_steps": [
+  {
+   "index": 1,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 27,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 1,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "06c642a3824c0649",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 2,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 2,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "c617e3f77f652811",
+   "changed_pixels": 2,
+   "level_changed": false,
+   "full_reset": false
+  }
+ ],
+ "agent_steps": [],
+ "outcome": null,
+ "levels_completed": 0,
+ "level_actions": [
+  2
+ ],
+ "score": 0.0
+}

@@ -88,15 +88,21 @@ class LLMClient:
         self._client = OpenAI(base_url=model.base_url, api_key=key, max_retries=4, timeout=180)
 
     def _create_with_backoff(self, kwargs: dict):
-        """The provider caps concurrent requests per model; a 429 means wait, not fail."""
-        from openai import RateLimitError
+        """Wait out the provider's transient failures rather than losing a whole game.
+
+        Two kinds occur here: 429 when the per-key concurrency cap is full, and 5xx/timeouts
+        when a long reasoning request outlives the provider's proxy read window.
+        """
+        from openai import APIConnectionError, APIStatusError, APITimeoutError, RateLimitError
 
         delay, waited = 1.0, 0.0
         while True:
             try:
                 return self._client.chat.completions.create(**kwargs)
-            except RateLimitError as e:
-                if waited >= RATE_LIMIT_MAX_WAIT_S:
+            except (RateLimitError, APITimeoutError, APIConnectionError, APIStatusError) as e:
+                transient = isinstance(e, (RateLimitError, APITimeoutError, APIConnectionError)) or (
+                    isinstance(e, APIStatusError) and e.status_code >= 500)
+                if not transient or waited >= RATE_LIMIT_MAX_WAIT_S:
                     raise
                 time.sleep(delay)
                 waited += delay

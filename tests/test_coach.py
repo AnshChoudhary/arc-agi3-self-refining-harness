@@ -259,3 +259,39 @@ def test_reverted_edits_cannot_be_re_proposed(monkeypatch):
     # Code edits are compared against reverted code, not against reverted rules.
     code = "def analyze():\n    return f'{actions_this_level}/{budget_this_level} actions used'\n"
     assert hs.validate([hs.Edit("meta", "write_analysis", ["t1"], "r", text=code)], {"t1"}, 3) == []
+
+
+def test_transient_provider_failures_are_retried(monkeypatch):
+    """A 5xx or timeout must not lose a game; a 4xx must fail fast."""
+    from openai import APIStatusError, RateLimitError
+
+    from arc_harness.llm import LLMClient
+    from config.models import get_model
+
+    monkeypatch.setenv("NEURALWATT_API_KEY", "test-key")
+    client = LLMClient(get_model("deepseek-flash"), use_cache=False)
+    monkeypatch.setattr("time.sleep", lambda s: None)
+
+    class FakeResponse:  # only .status_code and .headers are read by the SDK's constructors
+        def __init__(self, code): self.status_code, self.headers, self.request = code, {}, None
+
+    resp = FakeResponse
+    calls = {"n": 0}
+
+    def flaky(**kwargs):
+        calls["n"] += 1
+        if calls["n"] == 1:
+            raise APIStatusError("gateway timeout", response=resp(524), body=None)
+        if calls["n"] == 2:
+            raise RateLimitError("busy", response=resp(429), body=None)
+        return "ok"
+
+    monkeypatch.setattr(client._client.chat.completions, "create", flaky)
+    assert client._create_with_backoff({}) == "ok" and calls["n"] == 3
+
+    def refused(**kwargs):
+        raise APIStatusError("payment required", response=resp(402), body=None)
+
+    monkeypatch.setattr(client._client.chat.completions, "create", refused)
+    with pytest.raises(APIStatusError):
+        client._create_with_backoff({})
