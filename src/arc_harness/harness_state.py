@@ -32,7 +32,8 @@ ANALYSIS = HARNESS_DIR / "analysis.py"
 TOOLS_DIR = HARNESS_DIR / "tools"
 
 TAGS = ("procedural", "perceptual", "tooling", "meta")
-OPS = ("add_rule", "replace_rule", "remove_rule", "write_tool", "write_analysis")
+RULE_OPS = ("add_rule", "replace_rule", "remove_rule")
+OPS = RULE_OPS + ("write_tool", "write_analysis")
 RULE_RE = re.compile(r"^(\d+)\.\s+(.*)$")
 
 
@@ -125,6 +126,42 @@ def render_rules(preamble: str, rules: list[str]) -> str:
 
 
 # ---- validation ---------------------------------------------------------------
+
+# A re-proposal of a reverted edit is rejected at these similarity levels. Measured against round 1:
+# re-proposals scored 0.46-0.54 / 0.39-0.49, while a genuinely different rule on the same topic scored 0.34 / 0.32.
+SIMILAR_SEQ = 0.45
+SIMILAR_JACCARD = 0.38
+
+
+def _words(text: str) -> list[str]:
+    return re.sub(r"[^a-z0-9 ]", " ", text.lower()).split()
+
+
+def similarity(a: str, b: str) -> tuple[float, float]:
+    """(sequence ratio, jaccard) over normalised words."""
+    wa, wb = _words(a), _words(b)
+    if not wa or not wb:
+        return 0.0, 0.0
+    seq = difflib.SequenceMatcher(None, wa, wb).ratio()
+    sa, sb = set(wa), set(wb)
+    return seq, len(sa & sb) / len(sa | sb)
+
+
+def reverted_texts() -> list[tuple[str, str]]:
+    """(op, added text) for every edit that was applied and later rolled back."""
+    history = edit_history()
+    reverted = {e["round_id"] for e in history if e.get("op") == "rollback"}
+    out: list[tuple[str, str]] = []
+    for e in history:
+        if e.get("op") == "rollback" or e["round_id"] not in reverted:
+            continue
+        added = [ln[1:] for ln in e["diff"].splitlines() if ln.startswith("+") and not ln.startswith("+++")]
+        body = "\n".join(added).strip()
+        body = re.sub(r"^\d+\.\s*", "", body)  # drop the rule number; it is positional, not content
+        if body:
+            out.append((e["op"], body))
+    return out
+
 
 def known_game_ids() -> set[str]:
     """Every game id the toolkit has on disk (base and versioned). Not the split: no held-out list is read."""
@@ -222,6 +259,7 @@ def validate(edits: list[Edit], known_trajectories: set[str], max_edits: int) ->
     if len(edits) > max_edits:
         problems.append(f"{len(edits)} edits exceeds the per-round limit of {max_edits}")
     ids = known_game_ids()
+    reverted = reverted_texts()
     _, rules = parse_rules(PLAYBOOK.read_text()) if PLAYBOOK.exists() else ("", [])
     for i, e in enumerate(edits):
         where = f"edit {i + 1} ({e.op})"
@@ -249,6 +287,17 @@ def validate(edits: list[Edit], known_trajectories: set[str], max_edits: int) ->
         if e.op in ("replace_rule", "remove_rule"):
             if e.rule_number is None or not (1 <= e.rule_number <= len(rules)):
                 problems.append(f"{where}: rule_number {e.rule_number} out of range 1..{len(rules)}")
+        for op, prior in reverted:
+            same_kind = (e.op in RULE_OPS) == (op in RULE_OPS)
+            if not same_kind or not e.text.strip():
+                continue
+            seq, jac = similarity(e.text, prior)
+            if seq >= SIMILAR_SEQ or jac >= SIMILAR_JACCARD:
+                problems.append(
+                    f"{where}: restates an edit that was already tried and rolled back "
+                    f"(similarity {seq:.2f}/{jac:.2f}, limits {SIMILAR_SEQ}/{SIMILAR_JACCARD}). "
+                    f"Reverted text: {prior[:120]!r}. Propose a different change.")
+                break
         if e.op in ("write_tool", "write_analysis"):
             e.text = choose_source(e.text)
         if e.op == "write_tool":

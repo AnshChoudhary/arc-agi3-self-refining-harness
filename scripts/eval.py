@@ -74,6 +74,7 @@ class GameSpec:
     max_actions_per_level: int | None
     harness: str
     started_iso: str
+    repeat: int = 0
 
 
 def run_game(spec: GameSpec) -> dict:
@@ -104,7 +105,8 @@ def run_game(spec: GameSpec) -> dict:
     gs = game_score(res.game_id, res.baselines, res.level_actions, res.levels_completed)
     started = datetime.fromisoformat(spec.started_iso)
     path = save(build(env, agent.name, agent_steps, gs.score, model.name if model else None,
-                      f"{spec.harness}@{harness_fingerprint()}", started))
+                      f"{spec.harness}@{harness_fingerprint()}", started,
+                      suffix=f"_r{spec.repeat}" if spec.repeat else ""))
     if aborted:
         outcome = f"aborted_{aborted}"
     elif res.outcome is None:  # env.done is False: either we stopped it or the agent gave up
@@ -164,6 +166,8 @@ def main() -> None:
     ap.add_argument("--max-actions-per-level", type=int, default=None,
                     help="ceiling under the 5x-human budget (cheaper scans); recorded in the results row")
     ap.add_argument("--offline", action="store_true", help="never contact the ARC API")
+    ap.add_argument("--repeats", type=int, default=1,
+                    help="runs per game; scores are averaged. Single runs are noise-dominated on marginal games")
     ap.add_argument("--jobs", type=int, default=1, help="games played concurrently (separate processes)")
     ap.add_argument("--dry-run", action="store_true", help="print the cost projection and exit")
     args = ap.parse_args()
@@ -189,10 +193,12 @@ def main() -> None:
 
     started = datetime.now(timezone.utc)
     t0 = time.perf_counter()
+    # Repeats must not replay cached replies, or every repeat is the same run.
+    use_cache = (not args.no_llm_cache) and args.repeats == 1
     specs = [GameSpec(g, args.agent, args.model if model else None, args.effort, args.agent_seed,
-                      not args.no_llm_cache, args.seed, offline, args.max_levels, args.max_actions_per_level,
-                      args.harness, started.isoformat())
-             for g in games]
+                      use_cache, args.seed, offline, args.max_levels, args.max_actions_per_level,
+                      args.harness, started.isoformat(), repeat=i)
+             for g in games for i in range(args.repeats)]
     rows: list[GameRow] = []
     scores: list[GameScore] = []
     usage = Usage()
@@ -217,8 +223,18 @@ def main() -> None:
             except KeyboardInterrupt:
                 pool.shutdown(cancel_futures=True)
                 print(f"interrupted: {len(rows)}/{len(specs)} games finished; in-flight games were lost", flush=True)
-        rows.sort(key=lambda r: r.game_id)
+        rows.sort(key=lambda r: (r.game_id, r.trajectory))
         scores.sort(key=lambda g: g.game_id)
+
+    if args.repeats > 1:  # average the repeats so one game contributes one score
+        by_game: dict[str, list[GameScore]] = {}
+        for sc in scores:
+            by_game.setdefault(sc.game_id, []).append(sc)
+        scores = [GameScore(gid, sum(s.score for s in v) / len(v), v[0].level_scores, v[0].level_actions,
+                            v[0].baselines, max(s.levels_completed for s in v)) for gid, v in sorted(by_game.items())]
+        print("per-game mean over repeats: " + ", ".join(
+            f"{gid[:4]} {sum(s.score for s in v)/len(v):.3f} of {[round(s.score, 3) for s in v]}"
+            for gid, v in sorted(by_game.items())), flush=True)
 
     total = rhae(scores)
     run_id = f"{started.strftime('%Y%m%dT%H%M%SZ')}_{args.set}_{agent.name}"
@@ -240,6 +256,7 @@ def main() -> None:
         "max_levels": args.max_levels,
         "max_actions_per_level": args.max_actions_per_level,
         "jobs": args.jobs,
+        "repeats": args.repeats,
         "toolkit": {"arc-agi": version("arc-agi"), "arcengine": version("arcengine")},
         "argv": sys.argv[1:],
         "rhae": total,

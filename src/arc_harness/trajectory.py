@@ -92,12 +92,13 @@ def build(
     model: str | None = None,
     harness_snapshot: str | None = None,
     started_at: datetime | None = None,
+    suffix: str = "",
 ) -> Trajectory:
     started = started_at or datetime.now(timezone.utc)
     res = env.result()
     stamp = started.strftime("%Y%m%dT%H%M%SZ")
     return Trajectory(
-        trajectory_id=f"{env.game_id}_{agent}_{stamp}",
+        trajectory_id=f"{env.game_id}_{agent}_{stamp}{suffix}",
         game_id=env.game_id,
         split=split_of(env.game_id),
         agent=agent,

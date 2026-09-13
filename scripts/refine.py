@@ -64,6 +64,8 @@ def main() -> None:
     ap.add_argument("--effort", choices=EFFORTS, default=DEFAULT_EFFORT)
     ap.add_argument("--max-edits", type=int, default=3)
     ap.add_argument("--retries", type=int, default=1, help="repair attempts after a validator rejection")
+    ap.add_argument("--any-harness", action="store_true",
+                    help="use the newest trajectory per game regardless of which harness produced it")
     ap.add_argument("--dry-run", action="store_true", help="propose and validate only; touch nothing")
     ap.add_argument("--eval", action="store_true", help="after applying, run eval.py on refine then heldout; roll back on refine regression")
     ap.add_argument("--jobs", type=int, default=5)
@@ -74,9 +76,12 @@ def main() -> None:
 
     round_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     before_fp = harness_fingerprint()
-    trajectories = load_refine_trajectories(agent="student")
+    # Reason about the harness we are about to edit: trajectories produced by a since-reverted
+    # harness would otherwise be read as evidence about the current one.
+    trajectories = load_refine_trajectories(agent="student", harness_fingerprint=None if args.any_harness else before_fp)
     if not trajectories:
-        raise SystemExit("no student trajectories under trajectories/refine/; run eval.py --set refine first")
+        raise SystemExit(f"no student trajectories under trajectories/refine/ for harness {before_fp}; "
+                         "run eval.py --set refine first, or pass --any-harness")
     digests = [digest(t) for t in trajectories]
     known_ids = {t["trajectory_id"] for t in trajectories}
     print(f"round {round_id}: harness {before_fp}, {len(digests)} refine trajectories "

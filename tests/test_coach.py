@@ -235,3 +235,27 @@ def test_reverted_edits_are_shown_to_the_coach(monkeypatch):
     assert "A kept rule." not in out  # r2 was never rolled back
     monkeypatch.setattr(coach, "edit_history", lambda: [])
     assert coach.rolled_back_summary() == ""
+
+
+def test_reverted_edits_cannot_be_re_proposed(monkeypatch):
+    reverted_rule = ("An action that changed nothing is a no-op in that state. Do not use it again until the "
+                     "state changes. After probing each action once, stop probing and act on your best hypothesis.")
+    monkeypatch.setattr(hs, "edit_history", lambda: [
+        {"round_id": "r1", "op": "replace_rule", "tag": "procedural", "file": "playbook.md",
+         "diff": f"--- a\n+++ b\n+3. {reverted_rule}\n"},
+        {"round_id": "r1", "op": "rollback", "reason": "regressed"},
+    ])
+    restated = ("An action that changed nothing is a no-op in the current state. Do not use it again until the "
+                "state changes. If you have already probed an action and it changed nothing, never use it again "
+                "in the same state. Track no-op actions in your notes and avoid them.")
+    problems = hs.validate([hs.Edit("procedural", "replace_rule", ["t1"], "r", text=restated, rule_number=3)], {"t1"}, 3)
+    assert any("already tried and rolled back" in p for p in problems)
+
+    # A genuinely different rule on the same topic is allowed through.
+    different = ("For a click action, a click that changed nothing rules out that position, not the action. "
+                 "Keep a list of dead positions and aim at an untried component centre.")
+    assert hs.validate([hs.Edit("procedural", "replace_rule", ["t1"], "r", text=different, rule_number=3)], {"t1"}, 3) == []
+
+    # Code edits are compared against reverted code, not against reverted rules.
+    code = "def analyze():\n    return f'{actions_this_level}/{budget_this_level} actions used'\n"
+    assert hs.validate([hs.Edit("meta", "write_analysis", ["t1"], "r", text=code)], {"t1"}, 3) == []

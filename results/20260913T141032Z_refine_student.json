@@ -1,0 +1,138 @@
+{
+ "run_id": "20260913T141032Z_refine_student",
+ "started_at": "2026-09-13T14:10:32.639331+00:00",
+ "wall_seconds": 2716.4,
+ "set": "refine",
+ "agent": "student",
+ "model": "deepseek-v4-flash",
+ "effort": "high",
+ "harness_snapshot": "current@99d565924aff",
+ "code_version": "61f5c9a+dirty",
+ "split_file_sha1": "8a7011090297",
+ "split_seed": 0,
+ "env_seed": 0,
+ "agent_seed": 0,
+ "budget_multiplier": 5,
+ "max_levels": 1,
+ "max_actions_per_level": 60,
+ "jobs": 4,
+ "toolkit": {
+  "arc-agi": "0.9.9",
+  "arcengine": "0.9.3"
+ },
+ "argv": [
+  "--set",
+  "refine",
+  "--games",
+  "vc33,s5i5,ls20,tn36",
+  "--agent",
+  "student",
+  "--effort",
+  "high",
+  "--max-levels",
+  "1",
+  "--max-actions-per-level",
+  "60",
+  "--offline",
+  "--jobs",
+  "4",
+  "--no-llm-cache"
+ ],
+ "rhae": 0.01584285714285714,
+ "cost": {
+  "input_tokens": 6379486,
+  "output_tokens": 1151579,
+  "cached_input_tokens": 5038848,
+  "reasoning_tokens": 0,
+  "calls": 691,
+  "cache_hits": 0,
+  "usd": 0.6512
+ },
+ "games": [
+  {
+   "game_id": "ls20-9607627b",
+   "score": 0.027657142857142856,
+   "levels_completed": 1,
+   "outcome": "stopped_max_levels",
+   "level_actions": [
+    25
+   ],
+   "baselines": [
+    22,
+    123,
+    73,
+    84,
+    96,
+    192,
+    186
+   ],
+   "trajectory": "trajectories/refine/ls20-9607627b_student_20260913T141032Z.json",
+   "input_tokens": 1628566,
+   "output_tokens": 354231
+  },
+  {
+   "game_id": "s5i5-18d95033",
+   "score": 0.0,
+   "levels_completed": 0,
+   "outcome": "budget_exhausted",
+   "level_actions": [
+    60
+   ],
+   "baselines": [
+    20,
+    89,
+    106,
+    54,
+    162,
+    38,
+    86,
+    83
+   ],
+   "trajectory": "trajectories/refine/s5i5-18d95033_student_20260913T141032Z.json",
+   "input_tokens": 2194488,
+   "output_tokens": 442132
+  },
+  {
+   "game_id": "tn36-ef4dde99",
+   "score": 0.03571428571428571,
+   "levels_completed": 1,
+   "outcome": "stopped_max_levels",
+   "level_actions": [
+    12
+   ],
+   "baselines": [
+    32,
+    72,
+    26,
+    40,
+    30,
+    55,
+    62
+   ],
+   "trajectory": "trajectories/refine/tn36-ef4dde99_student_20260913T141032Z.json",
+   "input_tokens": 384919,
+   "output_tokens": 60134
+  },
+  {
+   "game_id": "vc33-5430563c",
+   "score": 0.0,
+   "levels_completed": 0,
+   "outcome": "budget_exhausted",
+   "level_actions": [
+    35
+   ],
+   "baselines": [
+    7,
+    18,
+    44,
+    61,
+    131,
+    34,
+    152
+   ],
+   "trajectory": "trajectories/refine/vc33-5430563c_student_20260913T141032Z.json",
+   "input_tokens": 2171513,
+   "output_tokens": 295082
+  }
+ ]
+}

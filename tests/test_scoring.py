@@ -32,3 +32,18 @@ def test_matches_toolkit():
         ours = game_score("x", baselines, actions, done).score
         theirs = toolkit_score(baselines, actions, done)
         assert abs(ours - theirs) < 1e-9, (baselines, actions, done, ours, theirs)
+
+
+def test_repeated_runs_average_into_one_game_score():
+    """--repeats averages a game's runs so a coin-flip game does not swing the set RHAE."""
+    from arc_harness.scoring import GameScore, rhae
+
+    runs = [GameScore("g1", 0.036, [], [], [], 1), GameScore("g1", 0.0, [], [], [], 0),
+            GameScore("g2", 0.0, [], [], [], 0), GameScore("g2", 0.0, [], [], [], 0)]
+    by_game = {}
+    for r in runs:
+        by_game.setdefault(r.game_id, []).append(r)
+    averaged = [GameScore(g, sum(s.score for s in v) / len(v), [], [], [], max(s.levels_completed for s in v))
+                for g, v in sorted(by_game.items())]
+    assert [round(s.score, 4) for s in averaged] == [0.018, 0.0]
+    assert abs(rhae(averaged) - 0.009) < 1e-9
