@@ -1,0 +1,161 @@
+{
+ "trajectory_id": "tn36-ef4dde99_student_20260913T181841Z_r1",
+ "game_id": "tn36-ef4dde99",
+ "split": "refine",
+ "agent": "student",
+ "seed": 0,
+ "model": "deepseek-v4-flash",
+ "harness_snapshot": "current@bc653ad4e040",
+ "code_version": "4a4c9bf",
+ "budget_multiplier": 5,
+ "max_actions_per_level": 60,
+ "toolkit": {
+  "arc-agi": "0.9.9",
+  "arcengine": "0.9.3"
+ },
+ "started_at": "2026-09-13T18:18:41.783732+00:00",
+ "baselines": [
+  32,
+  72,
+  26,
+  40,
+  30,
+  55,
+  62
+ ],
+ "env_steps": [
+  {
+   "index": 1,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 18,
+    "y": 11
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 1,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "05c55261901ff9cb",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 2,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 16,
+    "y": 11
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 2,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "8deeb739ee58562f",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 3,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 31,
+    "y": 14
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 3,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "0cfd3335887a7538",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 4,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 36,
+    "y": 55
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 4,
+   "budget_this_level": 60,
+   "n_frames": 7,
+   "frame_hash": "c0ddd722a398d43b",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 5,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 31,
+    "y": 39
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 5,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "c39c734addf65682",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 6,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 26,
+    "y": 44
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 6,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "9c9c85247cdc11f4",
+   "changed_pixels": 4,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 7,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 36,
+    "y": 44
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 7,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "8d48649fa05ff26a",
+   "changed_pixels": 4,
+   "level_changed": false,
+   "full_reset": false
+  }
+ ],
+ "agent_steps": [],
+ "outcome": null,
+ "levels_completed": 0,
+ "level_actions": [
+  7
+ ],
+ "score": 0.0
+}

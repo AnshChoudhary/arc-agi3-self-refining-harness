@@ -1,0 +1,225 @@
+{
+ "run_id": "20260913T181841Z_refine_student",
+ "started_at": "2026-09-13T18:18:41.783732+00:00",
+ "wall_seconds": 4779.6,
+ "set": "refine",
+ "agent": "student",
+ "model": "deepseek-v4-flash",
+ "effort": "high",
+ "harness_snapshot": "current@bc653ad4e040",
+ "code_version": "4a4c9bf",
+ "split_file_sha1": "8a7011090297",
+ "split_seed": 0,
+ "env_seed": 0,
+ "agent_seed": 0,
+ "budget_multiplier": 5,
+ "max_levels": 1,
+ "max_actions_per_level": 60,
+ "jobs": 4,
+ "repeats": 2,
+ "toolkit": {
+  "arc-agi": "0.9.9",
+  "arcengine": "0.9.3"
+ },
+ "argv": [
+  "--set",
+  "refine",
+  "--games",
+  "vc33,s5i5,ls20,tn36",
+  "--agent",
+  "student",
+  "--effort",
+  "high",
+  "--max-levels",
+  "1",
+  "--max-actions-per-level",
+  "60",
+  "--offline",
+  "--jobs",
+  "4",
+  "--repeats",
+  "2"
+ ],
+ "rhae": 0.013774631763906527,
+ "cost": {
+  "input_tokens": 9717258,
+  "output_tokens": 2057264,
+  "cached_input_tokens": 7670784,
+  "reasoning_tokens": 0,
+  "calls": 1079,
+  "cache_hits": 0,
+  "usd": 1.0773
+ },
+ "games": [
+  {
+   "game_id": "ls20-9607627b",
+   "score": 0.03267620847961113,
+   "levels_completed": 1,
+   "outcome": "stopped_max_levels",
+   "level_actions": [
+    23
+   ],
+   "baselines": [
+    22,
+    123,
+    73,
+    84,
+    96,
+    192,
+    186
+   ],
+   "trajectory": "trajectories/refine/ls20-9607627b_student_20260913T181841Z.json",
+   "input_tokens": 1478073,
+   "output_tokens": 376779
+  },
+  {
+   "game_id": "ls20-9607627b",
+   "score": 0.03571428571428571,
+   "levels_completed": 1,
+   "outcome": "stopped_max_levels",
+   "level_actions": [
+    19
+   ],
+   "baselines": [
+    22,
+    123,
+    73,
+    84,
+    96,
+    192,
+    186
+   ],
+   "trajectory": "trajectories/refine/ls20-9607627b_student_20260913T181841Z_r1.json",
+   "input_tokens": 832919,
+   "output_tokens": 152757
+  },
+  {
+   "game_id": "s5i5-18d95033",
+   "score": 0.0,
+   "levels_completed": 0,
+   "outcome": "aborted_APIStatusError",
+   "level_actions": [
+    59
+   ],
+   "baselines": [
+    20,
+    89,
+    106,
+    54,
+    162,
+    38,
+    86,
+    83
+   ],
+   "trajectory": "trajectories/refine/s5i5-18d95033_student_20260913T181841Z.json",
+   "input_tokens": 2497544,
+   "output_tokens": 458765
+  },
+  {
+   "game_id": "s5i5-18d95033",
+   "score": 0.0,
+   "levels_completed": 0,
+   "outcome": "aborted_APIStatusError",
+   "level_actions": [
+    53
+   ],
+   "baselines": [
+    20,
+    89,
+    106,
+    54,
+    162,
+    38,
+    86,
+    83
+   ],
+   "trajectory": "trajectories/refine/s5i5-18d95033_student_20260913T181841Z_r1.json",
+   "input_tokens": 2797798,
+   "output_tokens": 512249
+  },
+  {
+   "game_id": "tn36-ef4dde99",
+   "score": 0.0,
+   "levels_completed": 0,
+   "outcome": "aborted_APIStatusError",
+   "level_actions": [
+    16
+   ],
+   "baselines": [
+    32,
+    72,
+    26,
+    40,
+    30,
+    55,
+    62
+   ],
+   "trajectory": "trajectories/refine/tn36-ef4dde99_student_20260913T181841Z.json",
+   "input_tokens": 923884,
+   "output_tokens": 236133
+  },
+  {
+   "game_id": "tn36-ef4dde99",
+   "score": 0.0,
+   "levels_completed": 0,
+   "outcome": "aborted_APIStatusError",
+   "level_actions": [
+    7
+   ],
+   "baselines": [
+    32,
+    72,
+    26,
+    40,
+    30,
+    55,
+    62
+   ],
+   "trajectory": "trajectories/refine/tn36-ef4dde99_student_20260913T181841Z_r1.json",
+   "input_tokens": 384890,
+   "output_tokens": 148344
+  },
+  {
+   "game_id": "vc33-5430563c",
+   "score": 0.02734375,
+   "levels_completed": 1,
+   "outcome": "stopped_max_levels",
+   "level_actions": [
+    8
+   ],
+   "baselines": [
+    7,
+    18,
+    44,
+    61,
+    131,
+    34,
+    152
+   ],
+   "trajectory": "trajectories/refine/vc33-5430563c_student_20260913T181841Z.json",
+   "input_tokens": 251924,
+   "output_tokens": 53865
+  },
+  {
+   "game_id": "vc33-5430563c",
+   "score": 0.01446280991735537,
+   "levels_completed": 1,
+   "outcome": "stopped_max_levels",
+   "level_actions": [
+    11
+   ],
+   "baselines": [
+    7,
+    18,
+    44,
+    61,
+    131,
+    34,
+    152
+   ],
+   "trajectory": "trajectories/refine/vc33-5430563c_student_20260913T181841Z_r1.json",
+   "input_tokens": 550226,
+   "output_tokens": 118372
+  }
+ ]
+}

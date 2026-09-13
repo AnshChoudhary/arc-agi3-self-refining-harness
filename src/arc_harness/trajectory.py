@@ -43,6 +43,7 @@ class Trajectory:
     agent: str
     seed: int
     model: str | None
+    effort: str | None
     harness_snapshot: str | None
     code_version: str  # git commit of the loop that produced this trajectory
     budget_multiplier: int
@@ -91,6 +92,7 @@ def build(
     score: float,
     model: str | None = None,
     harness_snapshot: str | None = None,
+    effort: str | None = None,
     started_at: datetime | None = None,
     suffix: str = "",
 ) -> Trajectory:
@@ -104,6 +106,7 @@ def build(
         agent=agent,
         seed=env.seed,
         model=model,
+        effort=effort,
         harness_snapshot=harness_snapshot,
         code_version=code_version(),
         budget_multiplier=env.budget_multiplier,

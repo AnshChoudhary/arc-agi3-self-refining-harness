@@ -106,6 +106,7 @@ def run_game(spec: GameSpec) -> dict:
     started = datetime.fromisoformat(spec.started_iso)
     path = save(build(env, agent.name, agent_steps, gs.score, model.name if model else None,
                       f"{spec.harness}@{harness_fingerprint()}", started,
+                      effort=spec.effort if model else None,
                       suffix=f"_r{spec.repeat}" if spec.repeat else ""))
     if aborted:
         outcome = f"aborted_{aborted}"

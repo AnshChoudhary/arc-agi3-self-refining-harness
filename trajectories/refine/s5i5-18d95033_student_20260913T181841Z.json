@@ -1,0 +1,1095 @@
+{
+ "trajectory_id": "s5i5-18d95033_student_20260913T181841Z",
+ "game_id": "s5i5-18d95033",
+ "split": "refine",
+ "agent": "student",
+ "seed": 0,
+ "model": "deepseek-v4-flash",
+ "harness_snapshot": "current@bc653ad4e040",
+ "code_version": "4a4c9bf",
+ "budget_multiplier": 5,
+ "max_actions_per_level": 60,
+ "toolkit": {
+  "arc-agi": "0.9.9",
+  "arcengine": "0.9.3"
+ },
+ "started_at": "2026-09-13T18:18:41.783732+00:00",
+ "baselines": [
+  20,
+  89,
+  106,
+  54,
+  162,
+  38,
+  86,
+  83
+ ],
+ "env_steps": [
+  {
+   "index": 1,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 30,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 1,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "06c642a3824c0649",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 2,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 2,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "c617e3f77f652811",
+   "changed_pixels": 2,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 3,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 10,
+    "y": 31
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 3,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "d0cbb6bfad0dc8c9",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 4,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 10,
+    "y": 52
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 4,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "cdd24ab8fa6587ee",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 5,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 30,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 5,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "664ef59e769759a6",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 6,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 6,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "32dcd4946d14db54",
+   "changed_pixels": 2,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 7,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 39,
+    "y": 21
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 7,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "f302c5b1a837f302",
+   "changed_pixels": 11,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 8,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 24,
+    "y": 38
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 8,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "c9580b1b1443dffe",
+   "changed_pixels": 11,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 9,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 9,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "9fb7c228cc230f67",
+   "changed_pixels": 2,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 10,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 10,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "b1cbdfbf61091847",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 11,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 9
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 11,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "d5ad7da859d0bd24",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 12,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 12,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "b75f9760b59be88e",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 13,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 10,
+    "y": 34
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 13,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "2659c874c002402b",
+   "changed_pixels": 2,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 14,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 45,
+    "y": 21
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 14,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "11d1da667d80f023",
+   "changed_pixels": 11,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 15,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 10,
+    "y": 34
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 15,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "7b05262adedb5cad",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 16,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 30,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 16,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "eb8b93893749b9a4",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 17,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 30,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 17,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "8a6843b7e8ba8bf9",
+   "changed_pixels": 2,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 18,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 31,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 18,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "1d05cd424746b905",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 19,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 30,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 19,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "0b1016d8e7e44724",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 20,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 30,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 20,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "130664e90fffd902",
+   "changed_pixels": 2,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 21,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 30,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 21,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "1ca8ef5c9e3a3b68",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 22,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 45,
+    "y": 21
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 22,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "0352f8a2bd749d01",
+   "changed_pixels": 11,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 23,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 0,
+    "y": 63
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 23,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "48bc6bea8ececeec",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 24,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 30,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 24,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "2379c955e90dce7d",
+   "changed_pixels": 2,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 25,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 30,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 25,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "a0494a98077f5b5a",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 26,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 30,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 26,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "39ad41b3f2b28b65",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 27,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 30,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 27,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "f7d03d31f77eb132",
+   "changed_pixels": 2,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 28,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 30,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 28,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "83880df0ce8a55bb",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 29,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 30,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 29,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "5ca82b2b0033ac81",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 30,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 30,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 30,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "44b4130084de8f49",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 31,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 31,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "358748901dd634e9",
+   "changed_pixels": 2,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 32,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 32,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "d9658731765035a6",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 33,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 33,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "b985fb1166ba63ae",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 34,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 34,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "95e93a8fac99dc5d",
+   "changed_pixels": 2,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 35,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 35,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "f429f124f827ed34",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 36,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 36,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "6d94e49b2120f01c",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 37,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 39,
+    "y": 21
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 37,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "f12cd5ef222ec422",
+   "changed_pixels": 11,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 38,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 38,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "b3d36de4491becf4",
+   "changed_pixels": 2,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 39,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 39,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "dd0fcfd2118910f6",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 40,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 40,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "08627deadc719d52",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 41,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 41,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "b4c92e75d7fe4e2e",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 42,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 42,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "306f94aaa220283e",
+   "changed_pixels": 2,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 43,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 43,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "580e9bf782fb568a",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 44,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 44,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "1682a9bb13035a51",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 45,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 45,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "184f133b2b67be8e",
+   "changed_pixels": 2,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 46,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 46,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "78dc709c0a31a0dc",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 47,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 47,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "cbb8fceb162ecaf2",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 48,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 48,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "e4f3b9996f535fe0",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 49,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 49,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "c8f62a6253ebd972",
+   "changed_pixels": 2,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 50,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 52,
+    "y": 10
+   },
+   "state": "GAME_OVER",
+   "levels_completed": 0,
+   "actions_this_level": 50,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "249fc92be5d9a6a3",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 51,
+   "level": 0,
+   "action": "RESET",
+   "data": {},
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 51,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "0366149e636b9f5a",
+   "changed_pixels": 74,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 52,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 39,
+    "y": 21
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 52,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "56a12252f3e4438d",
+   "changed_pixels": 11,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 53,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 45,
+    "y": 21
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 53,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "c617e3f77f652811",
+   "changed_pixels": 12,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 54,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 42,
+    "y": 21
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 54,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "d0cbb6bfad0dc8c9",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 55,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 31,
+    "y": 10
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 55,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "cdd24ab8fa6587ee",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 56,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 24,
+    "y": 38
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 56,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "3b874c2cb33c3af3",
+   "changed_pixels": 11,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 57,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 45,
+    "y": 21
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 57,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "ea080e03099f9c92",
+   "changed_pixels": 12,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 58,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 24,
+    "y": 41
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 58,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "9aba96f25889508d",
+   "changed_pixels": 1,
+   "level_changed": false,
+   "full_reset": false
+  },
+  {
+   "index": 59,
+   "level": 0,
+   "action": "ACTION6",
+   "data": {
+    "x": 24,
+    "y": 44
+   },
+   "state": "NOT_FINISHED",
+   "levels_completed": 0,
+   "actions_this_level": 59,
+   "budget_this_level": 60,
+   "n_frames": 1,
+   "frame_hash": "04f8605bdf55b73a",
+   "changed_pixels": 11,
+   "level_changed": false,
+   "full_reset": false
+  }
+ ],
+ "agent_steps": [],
+ "outcome": null,
+ "levels_completed": 0,
+ "level_actions": [
+  59
+ ],
+ "score": 0.0
+}
