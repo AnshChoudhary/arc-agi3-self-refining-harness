@@ -36,6 +36,41 @@ OPS = ("add_rule", "replace_rule", "remove_rule", "write_tool", "write_analysis"
 RULE_RE = re.compile(r"^(\d+)\.\s+(.*)$")
 
 
+def _as_source(value) -> str:
+    """Code may arrive as a list of lines (preferred, unambiguous) or as one string."""
+    if isinstance(value, list):
+        return "\n".join(str(line) for line in value)
+    return str(value)
+
+
+def _source_candidates(text: str) -> list[str]:
+    """Readings of a code string, best first.
+
+    A model writing Python inside JSON sometimes double-escapes, so line breaks arrive as
+    literal backslash-n. That is ambiguous: `"\\n".join(lines)` legitimately contains the same
+    sequence. Rather than guess, offer each reading and let the compiler choose.
+    """
+    out = [text]
+    if "\n" not in text and "\\n" in text:
+        flat = text.replace("\\n", "\n").replace("\\t", "\t")
+        out.append(flat)
+        # ... and the same, with a newline between two quotes read back as an escape, which is
+        # how `"\\n".join(...)` looks once every escape has been expanded.
+        out.append(re.sub(r'(["\'])\n\1', lambda m: f"{m.group(1)}\\n{m.group(1)}", flat))
+    return out
+
+
+def choose_source(text: str) -> str:
+    """The first reading that compiles; the original if none do, so errors point at what was sent."""
+    for candidate in _source_candidates(text):
+        try:
+            compile(candidate, "<candidate>", "exec")
+            return candidate
+        except SyntaxError:
+            continue
+    return text
+
+
 @dataclass
 class Edit:
     tag: str
@@ -53,7 +88,7 @@ class Edit:
             op=str(d.get("op", "")),
             evidence=[str(e) for e in d.get("evidence", [])],
             rationale=str(d.get("rationale", "")),
-            text=str(d.get("text", d.get("content", ""))),
+            text=_as_source(d.get("text", d.get("content", ""))),
             rule_number=int(d["rule_number"]) if d.get("rule_number") is not None else None,
             name=str(d.get("name", "")),
         )
@@ -110,6 +145,37 @@ def mentions_game_id(text: str, ids: set[str]) -> str | None:
     return sorted(hit)[0] if hit else None
 
 
+def _step(index: int, action: str, changed: int) -> dict:
+    """A step log entry shaped exactly like env.Step, which is what the REPL exposes."""
+    return {"index": index, "level": 0, "action": action, "data": {}, "state": "NOT_FINISHED",
+            "levels_completed": 0, "actions_this_level": index, "budget_this_level": 30, "n_frames": 1,
+            "frame_hash": "0" * 16, "changed_pixels": changed, "level_changed": False, "full_reset": False}
+
+
+def _analysis_scenarios() -> list[tuple[str, dict]]:
+    """States analyze() must survive. The student hits all of these in a normal episode."""
+    blank = np.zeros((64, 64), dtype=np.int8)
+    first = blank.copy()
+    first[10:20, 10:20] = 3
+    moved = blank.copy()
+    moved[12:22, 10:20] = 3
+    common = {"level": 0, "levels_completed": 0, "budget_this_level": 30,
+              "available_actions": ["ACTION1", "ACTION6"], "baselines": [6, 9]}
+    return [
+        ("opening frame, nothing done yet",
+         {"frames": [first], "curr": first, "prev": first, "steps": [], "actions_this_level": 0, **common}),
+        ("an action that changed the frame",
+         {"frames": [first, moved], "curr": moved, "prev": first, "steps": [_step(1, "ACTION1", 40)],
+          "actions_this_level": 1, **common}),
+        ("a no-op after earlier actions",
+         {"frames": [first, moved, moved], "curr": moved, "prev": moved,
+          "steps": [_step(1, "ACTION1", 40), _step(2, "ACTION6", 0)], "actions_this_level": 2, **common}),
+        ("a uniform frame with no components",
+         {"frames": [blank, blank], "curr": blank, "prev": blank, "steps": [_step(1, "ACTION1", 0)],
+          "actions_this_level": 1, **common}),
+    ]
+
+
 def _check_code(source: str, kind: str) -> str | None:
     """Compile and exec tool/analysis code the way the REPL will; return an error string or None."""
     try:
@@ -120,23 +186,36 @@ def _check_code(source: str, kind: str) -> str | None:
     try:
         load_harness_tools(ns)  # analysis may call existing tools
         exec(source, ns)
-        if kind == "analysis":
-            frame = np.zeros((64, 64), dtype=np.int8)
-            frame[10:20, 10:20] = 3
-            ns.update(frames=[frame, frame], curr=frame, prev=frame, steps=[], level=0, levels_completed=0,
-                      actions_this_level=0, budget_this_level=10, available_actions=["ACTION1"], baselines=[2])
-            if "analyze" not in ns or not callable(ns["analyze"]):
-                return "analysis must define analyze()"
-            out = ns["analyze"]()
-            if not isinstance(out, str):
-                return "analyze() must return a string"
     except Exception as e:  # noqa: BLE001 — any failure means the edit is unsafe to install
         return f"{kind} failed to run: {type(e).__name__}: {e}"
+    if kind != "analysis":
+        return None
+    if "analyze" not in ns or not callable(ns["analyze"]):
+        return "analysis must define analyze()"
+    for label, state in _analysis_scenarios():
+        ns.update(state)
+        try:
+            out = ns["analyze"]()
+        except Exception as e:  # noqa: BLE001
+            return f"analyze() raised {type(e).__name__}: {e} — on {label}"
+        if not isinstance(out, str):
+            return f"analyze() returned {type(out).__name__}, not a string — on {label}"
     return None
 
 
+def resolve_evidence(cited: str, known: set[str]) -> str | None:
+    """Map a citation to a known trajectory id: exact, else a unique prefix (a game id names one run)."""
+    if cited in known:
+        return cited
+    matches = sorted(k for k in known if k.startswith(cited))
+    return matches[0] if len(matches) == 1 else None
+
+
 def validate(edits: list[Edit], known_trajectories: set[str], max_edits: int) -> list[str]:
-    """Return a list of human-readable problems; empty means the batch may be applied."""
+    """Return a list of human-readable problems; empty means the batch may be applied.
+
+    Evidence citations are normalised in place to full trajectory ids so the log records
+    exactly which run motivated each edit."""
     problems: list[str] = []
     if not edits:
         problems.append("no edits proposed")
@@ -153,9 +232,14 @@ def validate(edits: list[Edit], known_trajectories: set[str], max_edits: int) ->
             continue
         if not e.evidence:
             problems.append(f"{where}: no trajectory evidence cited")
-        unknown = [t for t in e.evidence if t not in known_trajectories]
+        resolved, unknown = [], []
+        for cited in e.evidence:
+            hit = resolve_evidence(cited, known_trajectories)
+            (resolved if hit else unknown).append(hit or cited)
         if unknown:
             problems.append(f"{where}: evidence not found in refine trajectories: {unknown}")
+        else:
+            e.evidence = resolved
         for label, blob in (("text", e.text), ("rationale", e.rationale), ("name", e.name)):
             hit = mentions_game_id(blob, ids)
             if hit:
@@ -165,6 +249,8 @@ def validate(edits: list[Edit], known_trajectories: set[str], max_edits: int) ->
         if e.op in ("replace_rule", "remove_rule"):
             if e.rule_number is None or not (1 <= e.rule_number <= len(rules)):
                 problems.append(f"{where}: rule_number {e.rule_number} out of range 1..{len(rules)}")
+        if e.op in ("write_tool", "write_analysis"):
+            e.text = choose_source(e.text)
         if e.op == "write_tool":
             if not re.fullmatch(r"[a-z][a-z0-9_]{0,30}", e.name or ""):
                 problems.append(f"{where}: tool name {e.name!r} must be a short snake_case identifier")

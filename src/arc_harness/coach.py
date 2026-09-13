@@ -113,9 +113,12 @@ Propose a SMALL batch of edits (at most the given limit) that would most improve
 games the student has NEVER seen. Rules:
   - Game-agnostic only. Never name or describe a specific game; never mention colours or shapes as if they
     were universal facts. Rules about *how to explore, verify, and act* transfer; facts about one game do not.
-  - Every edit must cite the trajectory ids that motivated it (use the ids exactly as given).
+  - Every edit must cite the trajectory ids that motivated it. Copy each id in full, exactly as it appears
+    after "###" in the evidence below (they look like "abcd-1234beef_student_20260101T000000Z"), not a prefix.
   - Prefer editing or removing a rule the student is ignoring over adding more rules. Keep rules short and testable.
   - Code you write must run: numpy only, no file or network access, return a string from analyze().
+    Send source as a JSON array of lines (["def analyze():", "    return 'x'"]) so nothing depends on escaping.
+    It must work on every state the student reaches, including before any action and when nothing changed.
 
 Tags: procedural (how to explore/act), perceptual (what things look like), tooling (python helper),
 meta (how the student reasons: hypothesis format, when to stop analysing, note-keeping).
@@ -161,14 +164,37 @@ def parse_proposal(text: str) -> tuple[str, list[Edit]]:
 
 
 def propose(llm: LLMClient, digests: list[TrajectoryDigest], harness_files: dict[str, str],
-            max_edits: int) -> tuple[str, list[Edit], str]:
-    """One coach call. Returns (analysis, edits, raw reply)."""
+            max_edits: int, validate=None, retries: int = 1) -> tuple[str, list[Edit], list[str]]:
+    """Coach call, with up to `retries` repairs when the referee's validator rejects the batch.
+
+    `validate(edits) -> list[str]` is passed in by the caller so this module never decides
+    what is admissible; it only relays the complaints back to the model.
+    Returns (analysis, edits, problems) — problems empty means the batch passed.
+    """
     messages = [
         {"role": "system", "content": COACH_SYSTEM_PROMPT},
         {"role": "user", "content": build_user_message(digests, harness_files, max_edits)},
     ]
-    resp = llm.chat(messages, json_mode=True)
-    if resp.truncated:
-        raise ValueError("coach reply was cut off by the token limit")
-    analysis, edits = parse_proposal(resp.text)
-    return analysis, edits, resp.text
+    analysis, edits, problems = "", [], []
+    for attempt in range(retries + 1):
+        resp = llm.chat(messages, json_mode=True)
+        if resp.truncated:
+            # Out of room, usually from a long reasoning phase. Ask for a smaller batch rather than fail.
+            if attempt == retries:
+                raise ValueError("coach reply was cut off by the token limit")
+            problems = ["the reply was cut off by the token limit"]
+            messages += [{"role": "user", "content": "Your reply was cut off. Send fewer, shorter edits "
+                          "(one is fine) and keep the analysis to three sentences."}]
+            continue
+        analysis, edits = parse_proposal(resp.text)
+        problems = validate(edits) if validate else []
+        if not problems or attempt == retries:
+            return analysis, edits, problems
+        messages += [
+            {"role": "assistant", "content": resp.text},
+            {"role": "user", "content": "The referee rejected this batch:\n- " + "\n- ".join(problems)
+             + "\n\nSend the corrected batch as one JSON object. Fix only what was rejected; "
+               "code must run on every state the student can reach, including before any action has been "
+               "taken and when the last action changed nothing."},
+        ]
+    return analysis, edits, problems

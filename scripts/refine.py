@@ -22,7 +22,7 @@ from arc_harness.coach import digest, load_refine_trajectories, propose
 from arc_harness.env import PROJECT_ROOT
 from arc_harness.llm import LLMClient
 from arc_harness.repl import harness_fingerprint
-from config.models import DEFAULT_EFFORT, DEFAULT_MODEL, EFFORTS, MODELS, get_model
+from config.models import COACH_MAX_TOKENS, DEFAULT_EFFORT, DEFAULT_MODEL, EFFORTS, MODELS, get_model
 
 RESULTS_DIR = PROJECT_ROOT / "results"
 
@@ -63,6 +63,7 @@ def main() -> None:
     ap.add_argument("--model", choices=sorted(MODELS), default=DEFAULT_MODEL)
     ap.add_argument("--effort", choices=EFFORTS, default=DEFAULT_EFFORT)
     ap.add_argument("--max-edits", type=int, default=3)
+    ap.add_argument("--retries", type=int, default=1, help="repair attempts after a validator rejection")
     ap.add_argument("--dry-run", action="store_true", help="propose and validate only; touch nothing")
     ap.add_argument("--eval", action="store_true", help="after applying, run eval.py on refine then heldout; roll back on refine regression")
     ap.add_argument("--jobs", type=int, default=5)
@@ -82,8 +83,10 @@ def main() -> None:
           f"({sum(d.solved for d in digests)} solved)")
 
     model = get_model(args.model)
-    llm = LLMClient(model, effort=args.effort, use_cache=not args.no_llm_cache, max_tokens=8192)
-    analysis, edits, raw = propose(llm, digests, hs.read_files(), args.max_edits)
+    llm = LLMClient(model, effort=args.effort, use_cache=not args.no_llm_cache, max_tokens=COACH_MAX_TOKENS)
+    check = lambda proposed: hs.validate(proposed, known_ids, args.max_edits)  # noqa: E731
+    analysis, edits, problems = propose(llm, digests, hs.read_files(), args.max_edits, validate=check,
+                                        retries=args.retries)
     print(f"coach ({model.name}, effort {args.effort}, {llm.usage.calls} call, ${llm.usage.cost_usd(model):.4f}):")
     print("  analysis:", analysis)
     for i, e in enumerate(edits, 1):
@@ -92,8 +95,10 @@ def main() -> None:
         print(f"       {e.rationale}")
         if e.op in ("add_rule", "replace_rule"):
             print(f"       -> {e.text}")
+        else:  # a dry run must show the code that would be installed
+            for line in e.text.rstrip().splitlines():
+                print(f"       | {line}")
 
-    problems = hs.validate(edits, known_ids, args.max_edits)
     if problems:
         print("REJECTED:")
         for p in problems:

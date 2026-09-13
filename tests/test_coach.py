@@ -81,7 +81,9 @@ def test_validation_accepts_good_batch_and_checks_code_runs():
     ]
     assert hs.validate(edits, {"t1"}, 3) == []
     broken = [hs.Edit("meta", "write_analysis", ["t1"], "r", text="def analyze():\n    return undefined_name\n")]
-    assert any("failed to run" in p for p in hs.validate(broken, {"t1"}, 3))
+    assert any("analyze() raised NameError" in p for p in hs.validate(broken, {"t1"}, 3))
+    at_import = [hs.Edit("tooling", "write_tool", ["t1"], "r", name="oops", text="raise RuntimeError('boom')\n")]
+    assert any("tool failed to run" in p for p in hs.validate(at_import, {"t1"}, 3))
 
 
 def test_snapshot_apply_log_rollback_roundtrip(monkeypatch, tmp_path):
@@ -141,3 +143,79 @@ def test_propose_builds_prompt_from_digests_and_harness():
     user = llm.messages[1]["content"]
     assert "--- playbook.md ---" in user and digests[0].trajectory_id in user and "at most 3 edits" in user
     assert hs.validate(edits, {d.trajectory_id for d in digests}, 3) == []
+
+
+def test_evidence_resolves_by_unique_prefix_and_is_normalised():
+    known = {"aaaa-1111_student_20260101T000000Z", "bbbb-2222_student_20260101T000000Z",
+             "bbbb-2222_student_20260102T000000Z"}
+    assert hs.resolve_evidence("aaaa-1111", known) == "aaaa-1111_student_20260101T000000Z"
+    assert hs.resolve_evidence("bbbb-2222", known) is None  # ambiguous: two runs of that game
+    assert hs.resolve_evidence("zzzz-9999", known) is None
+    e = hs.Edit("procedural", "add_rule", ["aaaa-1111"], "r", text="Check the diff before acting.")
+    assert hs.validate([e], known, 3) == []
+    assert e.evidence == ["aaaa-1111_student_20260101T000000Z"]  # normalised for the log
+
+
+def test_analysis_must_survive_every_reachable_state():
+    # The exact bug a real coach round produced: actions_this_level is an int, not a list.
+    bad = ("def analyze():\n"
+           "    if actions_this_level:\n"
+           "        return f'last was {actions_this_level[-1]}'\n"
+           "    return 'nothing yet'\n")
+    problems = hs.validate([hs.Edit("meta", "write_analysis", ["t1"], "r", text=bad)], {"t1"}, 3)
+    assert any("not subscriptable" in p and "on an action that changed the frame" in p for p in problems)
+    empty_grid = "def analyze():\n    return f'{components(curr)[0]}'\n"  # IndexError on a uniform frame
+    assert any("IndexError" in p for p in hs.validate(
+        [hs.Edit("meta", "write_analysis", ["t1"], "r", text=empty_grid)], {"t1"}, 3))
+    good = "def analyze():\n    return f'{len(frames)} frames, {actions_this_level} actions, {len(components(curr))} comps'\n"
+    assert hs.validate([hs.Edit("meta", "write_analysis", ["t1"], "r", text=good)], {"t1"}, 3) == []
+
+
+def test_propose_retries_once_with_the_validator_complaints():
+    trajectories = coach.load_refine_trajectories(agent="student")[:2]
+    digests = [coach.digest(t) for t in trajectories]
+    tid = digests[0].trajectory_id
+    bad = json.dumps({"analysis": "a", "edits": [{"tag": "procedural", "op": "add_rule", "text": "x",
+                                                  "evidence": ["nope"], "rationale": "r"}]})
+    good = json.dumps({"analysis": "a", "edits": [{"tag": "procedural", "op": "add_rule",
+                                                   "text": "Verify the last action's effect before acting again.",
+                                                   "evidence": [tid], "rationale": "r"}]})
+
+    class TwoShot:
+        def __init__(self): self.replies, self.seen, self.usage = [bad, good], [], Usage()
+        def chat(self, messages, json_mode=True, temperature=None):
+            self.seen.append([dict(m) for m in messages])
+            return LLMResponse(self.replies.pop(0), "stop", Usage(calls=1), False, 0.0)
+
+    llm = TwoShot()
+    known = {d.trajectory_id for d in digests}
+    analysis, edits, problems = coach.propose(llm, digests, hs.read_files(), 3,
+                                              validate=lambda e: hs.validate(e, known, 3), retries=1)
+    assert problems == [] and edits[0].evidence == [tid]
+    assert "The referee rejected this batch" in llm.seen[1][-1]["content"]
+
+
+def test_code_written_with_escaped_newlines_is_normalised():
+    escaped = 'def analyze():\\n    return f"{len(frames)} frames"\\n'
+    e = hs.Edit.from_dict({"tag": "meta", "op": "write_analysis", "text": escaped, "evidence": ["t1"], "rationale": "r"})
+    assert hs.validate([e], {"t1"}, 3) == []  # validate repairs the source it would install
+    assert "\n" in e.text and "\\n" not in e.text
+    # A normal multi-line string is left exactly as written.
+    plain = "def analyze():\n    return 'ok'\n"
+    assert hs.Edit.from_dict({"tag": "meta", "op": "write_analysis", "text": plain,
+                              "evidence": ["t1"], "rationale": "r"}).text == plain
+
+
+def test_code_accepts_line_arrays_and_repairs_escaped_strings():
+    lines = ["def analyze():", "    return \"\\n\".join([f'{len(frames)} frames', 'ok'])"]
+    e = hs.Edit.from_dict({"tag": "meta", "op": "write_analysis", "text": lines, "evidence": ["t1"], "rationale": "r"})
+    assert hs.validate([e], {"t1"}, 3) == []
+
+    # One flat string with escaped breaks, including a legitimate "\n".join that must survive.
+    flat = 'def analyze():\\n    parts = [f"{len(frames)} frames"]\\n    return "\\n".join(parts)'
+    e2 = hs.Edit.from_dict({"tag": "meta", "op": "write_analysis", "text": flat, "evidence": ["t1"], "rationale": "r"})
+    assert hs.validate([e2], {"t1"}, 3) == []
+    assert e2.text.count("\n") >= 2 and '"\\n".join(parts)' in e2.text
+
+    plain = "def analyze():\n    return 'ok'\n"
+    assert hs.choose_source(plain) == plain

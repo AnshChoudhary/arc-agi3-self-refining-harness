@@ -52,6 +52,8 @@ COST_CAP_USD: float = 25.00
 
 # Student loop knobs. These belong to the referee (fixed across runs), not to the harness.
 MAX_TOKENS: int = 2048  # JSON replies are short; raised automatically when reasoning is on
+# The coach writes whole source files in one reply and its reasoning shares the same budget.
+COACH_MAX_TOKENS: int = 65_536  # the model's maximum; reasoning shares this budget with the reply
 MAX_ANALYSIS_CALLS_PER_ACTION: int = 6  # free REPL calls before the student must act
 MAX_BAD_REPLIES: int = 3  # unparseable / invalid / repeated replies in a row before the episode is abandoned
 MAX_CALLS_PER_ACTION: int = MAX_ANALYSIS_CALLS_PER_ACTION + 2 * MAX_BAD_REPLIES + 2  # hard stop per env step
