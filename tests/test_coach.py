@@ -219,3 +219,19 @@ def test_code_accepts_line_arrays_and_repairs_escaped_strings():
 
     plain = "def analyze():\n    return 'ok'\n"
     assert hs.choose_source(plain) == plain
+
+
+def test_reverted_edits_are_shown_to_the_coach(monkeypatch):
+    history = [
+        {"round_id": "r1", "op": "add_rule", "tag": "procedural", "file": "playbook.md",
+         "diff": "--- a/playbook.md\n+++ b/playbook.md\n+11. Commit early and stop exploring.\n"},
+        {"round_id": "r1", "op": "rollback", "reason": "mean score 0.018 -> 0.008"},
+        {"round_id": "r2", "op": "add_rule", "tag": "meta", "file": "playbook.md",
+         "diff": "--- a/playbook.md\n+++ b/playbook.md\n+12. A kept rule.\n"},
+    ]
+    monkeypatch.setattr(coach, "edit_history", lambda: history)
+    out = coach.rolled_back_summary()
+    assert "Commit early and stop exploring." in out and "0.018 -> 0.008" in out
+    assert "A kept rule." not in out  # r2 was never rolled back
+    monkeypatch.setattr(coach, "edit_history", lambda: [])
+    assert coach.rolled_back_summary() == ""

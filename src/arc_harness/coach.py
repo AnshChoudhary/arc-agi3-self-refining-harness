@@ -16,7 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from arc_harness.env import PROJECT_ROOT
-from arc_harness.harness_state import TAGS, Edit
+from arc_harness.harness_state import TAGS, Edit, edit_history
 from arc_harness.llm import LLMClient
 from arc_harness.trajectory import TRAJECTORIES_DIR
 
@@ -135,6 +135,24 @@ Reply with exactly one JSON object:
 """
 
 
+def rolled_back_summary() -> str:
+    """Edits that were applied and then reverted, so the coach does not propose them again."""
+    history = edit_history()
+    reverted = {e["round_id"] for e in history if e.get("op") == "rollback"}
+    reasons = {e["round_id"]: e.get("reason", "") for e in history if e.get("op") == "rollback"}
+    lines: list[str] = []
+    for e in history:
+        if e.get("op") == "rollback" or e["round_id"] not in reverted:
+            continue
+        body = next((ln[1:].strip() for ln in e["diff"].splitlines() if ln.startswith("+") and not ln.startswith("+++")), "")
+        lines.append(f"- [{e['tag']}] {e['op']} {e['file']}: {body[:180]}")
+    if not lines:
+        return ""
+    why = "; ".join(sorted(set(reasons.values())))
+    return ("\n\n## Edits already tried and REVERTED — do not propose these again\n"
+            + "\n".join(lines) + f"\nMeasured outcome: {why}\n")
+
+
 def build_user_message(digests: list[TrajectoryDigest], harness_files: dict[str, str], max_edits: int) -> str:
     solved = sum(d.solved for d in digests)
     parts = [
@@ -144,6 +162,7 @@ def build_user_message(digests: list[TrajectoryDigest], harness_files: dict[str,
     ]
     for rel, text in harness_files.items():
         parts.append(f"--- {rel} ---\n{text}\n")
+    parts.append(rolled_back_summary())
     parts.append(f"\nPropose at most {max_edits} edits as the JSON object described.")
     return "\n".join(parts)
 
